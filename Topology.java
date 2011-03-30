@@ -37,19 +37,19 @@ public class Topology {
 		repetitions = calcRepetitionVector();
 	}
 	
-	private void setReps(double[] rv, int act, double rep){
+	private void setReps(Fraction[] rv, int act, Fraction rep){
 		//naive non-pre-sorted operation, O(n^3)
 		//will have to re-do this when there's time
-		//it is also suggested we use fractions not doubles
 		rv[act] = rep;
 		for(int l=0; l<numLinks; l++){
 			if(matrix[act][l] < 0){
-				System.out.println(act + " has a link on edge " + l);
+				//System.out.println(act + " has a link on edge " + l);
 				for(int a=0; a<numActors; a++){
 					if(matrix[a][l] > 0){
-						//System.out.println("Repeating link " + a + "(" + rv[a] + ") with rep " + (-rep * matrix[act][l] / matrix[a][l]) + ": " + matrix[a][l] + " " + matrix[act][l]);
+						Fraction newRep = rep.times(-matrix[a][l]).dividedBy(matrix[act][l]);
+						//System.out.println("Repeating link " + a + "(" + rv[a] + ") with rep " + newRep + ": " + matrix[a][l] + " " + matrix[act][l]);
 						//System.exit(0);
-						if(rv[a] == 0.0) setReps(rv, a, -rep * matrix[act][l] / matrix[a][l]);
+						if(rv[a].equals(0)) setReps(rv, a, newRep);
 						break;
 					}
 				}
@@ -59,8 +59,9 @@ public class Topology {
 			if(matrix[act][l] > 0){
 				for(int a=0; a<numActors; a++){
 					if(matrix[a][l] < 0){
-						//System.out.println("Repeating link " + a + "(" + rv[a] + ") with rep " + (-rep * matrix[a][l] / matrix[act][l]) + ": " + matrix[a][l] + " " + matrix[act][l]);
-						if(rv[a] == 0.0) setReps(rv, a, -rep * matrix[a][l] / matrix[act][l]);//inverse of above
+						Fraction newRep = rep.times(-matrix[act][l]).dividedBy(matrix[a][l]);
+						//System.out.println("Repeating link " + a + "(" + rv[a] + ") with rep " + newRep + ": " + matrix[a][l] + " " + matrix[act][l]);
+						if(rv[a].equals(0)) setReps(rv, a, newRep);//inverse of above
 						break;
 					}
 				}
@@ -69,19 +70,51 @@ public class Topology {
 	}
 	
 	private int[] calcRepetitionVector(){
-		double[] ret = new double[numActors];
-		if(ret.length == 0) return null;
-		setReps(ret, 0, 1.0);
-		for(int i=0; i<ret.length; i++){
-			System.out.println("rv: " + ret[i]);
+		if(numActors == 0) return null;
+		Fraction[] reps = new Fraction[numActors];
+		for(int i=0; i<numActors; i++) reps[i] = new Fraction(0, 1);
+		setReps(reps, 0, new Fraction(1, 1));
+		long[] denoms = new long[numActors];
+		for(int i=0; i<numActors; i++){
+			denoms[i] = reps[i].denominator();
 		}
-		//TODO calculate lowest common fraction
-		//possibly consider using fraction class instead of doubles
-		return null;
+		long lcm = Fraction.lcmm(denoms);
+		
+		int[] ret = new int[numActors];
+		for(int i=0; i<numActors; i++){
+			ret[i] = (int)reps[i].times(lcm).numerator();
+			//System.out.println(i + " = " + ret[i]);
+		}
+		for(int l=0; l<numLinks; l++){
+			int prod = 0;
+			int cons = 0;
+			for(int a=0; a<numActors; a++){
+				if(matrix[a][l] > 0){
+					prod = matrix[a][l] * ret[a];
+					//System.out.println(a + "-" + l + " produces " + prod);
+				}
+				if(matrix[a][l] < 0){
+					cons = -matrix[a][l] * ret[a];
+					//System.out.println(a + "-" + l + " consumes " + prod);
+				}
+			}
+			if(prod == 0 || prod != cons){
+				System.err.println("Invalid topology matrix: there exists no admissable schedule");
+				return null;
+			}
+		}
+		return ret;
 	}
 	
 	public String toString(){
 		String ret = "Gamma = " + numLinks + " x " + numActors;
+		if(repetitions != null){
+			ret += "\n= ";
+			for(int a=0; a<numActors; a++){
+				ret += repetitions[a] + "\t";
+			}
+			ret += "=";
+		}
 		for(int l=0; l<numLinks; l++){
 			ret += "\n| ";
 			for(int a=0; a<numActors; a++){
