@@ -1,4 +1,5 @@
 import java.util.*;
+import java.io.*;
 
 public class Topology {
 	
@@ -7,9 +8,11 @@ public class Topology {
 	
 	public final int[][] matrix;//matrix[actor][link]
 	
+	public final Actor[] actors;
+	
 	public final int[] repetitions;
 	
-	public static Topology loadTopology(Scanner top){
+	public static Topology loadTopology(Scanner top) throws InvalidTopologyException, NoValidScheduleException {
 		int actors = Integer.parseInt(top.nextLine());
 		int links = Integer.parseInt(top.nextLine());
 		int[][] topolog = new int[actors][links];
@@ -21,18 +24,35 @@ public class Topology {
 		return new Topology(topolog);
 	}
 	
-	public Topology(int act, int link){
+	/**public Topology(int act, int link){
 		numActors = act;
 		numLinks = link;
 		matrix = new int[numActors][numLinks];
 		
 		repetitions = calcRepetitionVector();
-	}
+	}**/
 	
-	public Topology(int[][] mat){
+	public Topology(int[][] mat) throws InvalidTopologyException, NoValidScheduleException{
 		matrix = mat;
 		numActors = matrix.length;
 		numLinks = (numActors > 0 ? matrix[0].length : 0);
+
+		actors = new Actor[numActors];
+		for(int a=0; a<numActors; a++) actors[a] = new Actor(a);
+		for(int l=0; l<numLinks; l++){
+			int prod = -1;
+			int con = -1;
+			int a = 0;
+			while((prod == -1 || con == -1) && a < numActors){
+				if(matrix[a][l] < 0) con = a;
+				if(matrix[a][l] > 0) prod = a;
+				a++;
+			}
+			if(prod == -1 || con == -1){
+				throw new InvalidTopologyException("Link " + l + " does not have valid producers/consumers");
+			}
+			new Link(actors[prod], matrix[prod][l], actors[con], -matrix[con][l]);//links show consumption as a positive integer, so must negate the value in topology matrix
+		}
 		
 		repetitions = calcRepetitionVector();
 	}
@@ -41,6 +61,7 @@ public class Topology {
 		//naive non-pre-sorted operation, O(n^3)
 		//will have to re-do this when there's time
 		rv[act] = rep;
+		
 		for(int l=0; l<numLinks; l++){
 			if(matrix[act][l] < 0){
 				//System.out.println(act + " has a link on edge " + l);
@@ -69,7 +90,7 @@ public class Topology {
 		}
 	}
 	
-	private int[] calcRepetitionVector(){
+	private int[] calcRepetitionVector() throws NoValidScheduleException{
 		if(numActors == 0) return null;
 		Fraction[] reps = new Fraction[numActors];
 		for(int i=0; i<numActors; i++) reps[i] = new Fraction(0, 1);
@@ -99,8 +120,7 @@ public class Topology {
 				}
 			}
 			if(prod == 0 || prod != cons){
-				System.err.println("Invalid topology matrix: there exists no admissable schedule");
-				return null;
+				throw new NoValidScheduleException("Inconsistant repetitions on link " + l);
 			}
 		}
 		return ret;
@@ -122,7 +142,67 @@ public class Topology {
 			}
 			ret += "|";
 		}
+		for(int a=0; a<actors.length; a++){
+			ret += "\n" + actors[a].toString();
+		}
 		return ret;
 	}
 	
+	//the actors' links start empty and are added
+	public static class Actor{
+		public final int myIndex;
+		public final ArrayList<Link> productions;//links which i produce for
+		public final ArrayList<Link> consumptions;//links which i consume from
+		
+		public Fraction repetitions;
+		
+		public Actor(int idex){
+			myIndex = idex;
+			productions = new ArrayList<Link>();
+			consumptions = new ArrayList<Link>();
+			repetitions = new Fraction(0, 1);
+		}
+		
+		public String toString(){
+			String ret = "Actor " + myIndex + " (r= " + repetitions + ")\n" + productions.size() + " productions";
+			for(Link l : productions) ret += "\n  " + l.toString();
+			ret += "\n" + consumptions.size() + " consumptions";
+			for(Link l : consumptions) ret += "\n  " + l.toString();
+			return ret;
+		}
+	}
+	
+	//Links automatically add themselves to the actors they link
+	public static class Link{
+		public final Actor producer;
+		public final int produceAmmount;
+		
+		public final Actor consumer;
+		public final int consumeAmmount;
+		
+		public Link(Actor prod, int pamt, Actor con, int camt){
+			producer = prod;
+			produceAmmount = pamt;
+			
+			consumer = con;
+			consumeAmmount = camt;
+			
+			producer.productions.add(this);
+			consumer.consumptions.add(this);
+		}
+		
+		public String toString(){
+			return producer.myIndex + "(" + produceAmmount + ") -> " + consumer.myIndex + "(" + consumeAmmount + ")";
+		}
+	}
+	
+	/*
+	 * Exceptions
+	 */
+	public class InvalidTopologyException extends IOException{
+		public InvalidTopologyException(String message){super(message);}
+	}
+	public class NoValidScheduleException extends IOException{
+		public NoValidScheduleException(String message){super(message);}
+	}
 }
