@@ -9,6 +9,7 @@ public class Topology {
 	public final int[][] matrix;//matrix[actor][link]
 	
 	public final Actor[] actors;
+	public final Link[] links;
 	
 	public final int[] repetitions;
 	
@@ -24,14 +25,6 @@ public class Topology {
 		return new Topology(topolog);
 	}
 	
-	/**public Topology(int act, int link){
-		numActors = act;
-		numLinks = link;
-		matrix = new int[numActors][numLinks];
-		
-		repetitions = calcRepetitionVector();
-	}**/
-	
 	public Topology(int[][] mat) throws InvalidTopologyException, NoValidScheduleException{
 		matrix = mat;
 		numActors = matrix.length;
@@ -39,6 +32,8 @@ public class Topology {
 
 		actors = new Actor[numActors];
 		for(int a=0; a<numActors; a++) actors[a] = new Actor(a);
+		
+		links = new Link[numLinks];
 		for(int l=0; l<numLinks; l++){
 			int prod = -1;
 			int con = -1;
@@ -51,78 +46,38 @@ public class Topology {
 			if(prod == -1 || con == -1){
 				throw new InvalidTopologyException("Link " + l + " does not have valid producers/consumers");
 			}
-			new Link(actors[prod], matrix[prod][l], actors[con], -matrix[con][l]);//links show consumption as a positive integer, so must negate the value in topology matrix
+			//links show consumption as a positive integer, so must negate the value in topology matrix
+			links[l] = new Link(l, actors[prod], matrix[prod][l], actors[con], -matrix[con][l]);
 		}
 		
 		repetitions = calcRepetitionVector();
 	}
 	
-	private void setReps(Fraction[] rv, int act, Fraction rep){
-		//naive non-pre-sorted operation, O(n^3)
-		//will have to re-do this when there's time
-		rv[act] = rep;
-		
-		for(int l=0; l<numLinks; l++){
-			if(matrix[act][l] < 0){
-				//System.out.println(act + " has a link on edge " + l);
-				for(int a=0; a<numActors; a++){
-					if(matrix[a][l] > 0){
-						Fraction newRep = rep.times(-matrix[a][l]).dividedBy(matrix[act][l]);
-						//System.out.println("Repeating link " + a + "(" + rv[a] + ") with rep " + newRep + ": " + matrix[a][l] + " " + matrix[act][l]);
-						//System.exit(0);
-						if(rv[a].equals(0)) setReps(rv, a, newRep);
-						break;
-					}
-				}
-			}
-		}
-		for(int l=0; l<numLinks; l++){
-			if(matrix[act][l] > 0){
-				for(int a=0; a<numActors; a++){
-					if(matrix[a][l] < 0){
-						Fraction newRep = rep.times(-matrix[act][l]).dividedBy(matrix[a][l]);
-						//System.out.println("Repeating link " + a + "(" + rv[a] + ") with rep " + newRep + ": " + matrix[a][l] + " " + matrix[act][l]);
-						if(rv[a].equals(0)) setReps(rv, a, newRep);//inverse of above
-						break;
-					}
-				}
-			}
-		}
-	}
-	
 	private int[] calcRepetitionVector() throws NoValidScheduleException{
 		if(numActors == 0) return null;
-		Fraction[] reps = new Fraction[numActors];
-		for(int i=0; i<numActors; i++) reps[i] = new Fraction(0, 1);
-		setReps(reps, 0, new Fraction(1, 1));
+		
+		//recurseively set the fractional repetitions of all actors
+		actors[0].setRepsRecursively(new Fraction(1, 1));
+		
+		//list the denominators, so we can find their LCM and make all repetitions integral
 		long[] denoms = new long[numActors];
-		for(int i=0; i<numActors; i++){
-			denoms[i] = reps[i].denominator();
-		}
+		for(int i=0; i<numActors; i++)
+			denoms[i] = actors[i].repetitions.denominator();
 		long lcm = Fraction.lcmm(denoms);
 		
+		//check that the production ammount equals the consumption ammount
+		for(Link l : links){
+			Fraction totProduce = l.producer.repetitions.times(l.produceAmmount);
+			Fraction totConsume = l.consumer.repetitions.times(l.consumeAmmount);
+			if(!totProduce.equals(totConsume))
+				throw new NoValidScheduleException("Inconsistant repetitions on link " + l + ", which produces " + totProduce + " and consumes " + totConsume);
+		}
+		
+		//return the vector of ints
+		//realistically all repetitions are currently stored fractionally in their Actor wrapper classes
 		int[] ret = new int[numActors];
-		for(int i=0; i<numActors; i++){
-			ret[i] = (int)reps[i].times(lcm).numerator();
-			//System.out.println(i + " = " + ret[i]);
-		}
-		for(int l=0; l<numLinks; l++){
-			int prod = 0;
-			int cons = 0;
-			for(int a=0; a<numActors; a++){
-				if(matrix[a][l] > 0){
-					prod = matrix[a][l] * ret[a];
-					//System.out.println(a + "-" + l + " produces " + prod);
-				}
-				if(matrix[a][l] < 0){
-					cons = -matrix[a][l] * ret[a];
-					//System.out.println(a + "-" + l + " consumes " + prod);
-				}
-			}
-			if(prod == 0 || prod != cons){
-				throw new NoValidScheduleException("Inconsistant repetitions on link " + l);
-			}
-		}
+		for(int i=0; i<numActors; i++)
+			ret[i] = (int)actors[i].repetitions.times(lcm).numerator();
 		return ret;
 	}
 	
@@ -160,11 +115,28 @@ public class Topology {
 			myIndex = idex;
 			productions = new ArrayList<Link>();
 			consumptions = new ArrayList<Link>();
-			repetitions = new Fraction(0, 1);
+			repetitions = null;
+		}
+		
+		public void setRepsRecursively(Fraction r){
+			repetitions = r;
+			for(Link pl: productions){
+				if(pl.consumer.repetitions == null){
+					Fraction newRep = repetitions.times(pl.produceAmmount).dividedBy(pl.consumeAmmount);
+					pl.consumer.setRepsRecursively(newRep);
+				}
+			}
+			
+			for(Link cl: consumptions){
+				if(cl.consumer.repetitions == null){
+					Fraction newRep = repetitions.times(cl.consumeAmmount).dividedBy(cl.produceAmmount);
+					cl.consumer.setRepsRecursively(newRep);
+				}
+			}
 		}
 		
 		public String toString(){
-			String ret = "Actor " + myIndex + " (r= " + repetitions + ")\n" + productions.size() + " productions";
+			String ret = "Actor " + myIndex + " (r = " + repetitions + ")\n" + productions.size() + " productions";
 			for(Link l : productions) ret += "\n  " + l.toString();
 			ret += "\n" + consumptions.size() + " consumptions";
 			for(Link l : consumptions) ret += "\n  " + l.toString();
@@ -174,13 +146,18 @@ public class Topology {
 	
 	//Links automatically add themselves to the actors they link
 	public static class Link{
+		
+		public final int myIndex;
+		
 		public final Actor producer;
 		public final int produceAmmount;
 		
 		public final Actor consumer;
 		public final int consumeAmmount;
 		
-		public Link(Actor prod, int pamt, Actor con, int camt){
+		public Link(int idex, Actor prod, int pamt, Actor con, int camt){
+			myIndex = idex;
+			
 			producer = prod;
 			produceAmmount = pamt;
 			
@@ -192,7 +169,7 @@ public class Topology {
 		}
 		
 		public String toString(){
-			return producer.myIndex + "(" + produceAmmount + ") -> " + consumer.myIndex + "(" + consumeAmmount + ")";
+			return myIndex + ": " + producer.myIndex + "(" + produceAmmount + ") -> " + consumer.myIndex + "(" + consumeAmmount + ")";
 		}
 	}
 	
