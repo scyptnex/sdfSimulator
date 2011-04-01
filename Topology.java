@@ -76,8 +76,10 @@ public class Topology {
 		//return the vector of ints
 		//realistically all repetitions are currently stored fractionally in their Actor wrapper classes
 		int[] ret = new int[numActors];
-		for(int i=0; i<numActors; i++)
-			ret[i] = (int)actors[i].repetitions.times(lcm).numerator();
+		for(int i=0; i<numActors; i++){
+			actors[i].repetitions = actors[i].repetitions.times(lcm);
+			ret[i] = (int)actors[i].repetitions.numerator();
+		}
 		return ret;
 	}
 	
