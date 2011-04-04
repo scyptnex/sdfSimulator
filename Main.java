@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class main{
+public class Main{
 	public static void main(String[] args) throws Exception{
 		
 		File testDir = new File("tests");
