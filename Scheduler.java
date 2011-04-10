@@ -1,6 +1,5 @@
-
-public interface Scheduler {
+public class Scheduler {
 	
-	public Schedule schedule(Topology top);
-
+	
+	
 }
