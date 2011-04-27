@@ -1,0 +1,4 @@
+serial scheduler
+	init schedule
+		break into 
+	death schedule
