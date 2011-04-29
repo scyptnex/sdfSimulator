@@ -1,6 +1,6 @@
 public class DelayConfig {
 	
-	public delayConfig(){
+	public DelayConfig(){
 		
 	}
 	

@@ -38,17 +38,19 @@ public class Tests {
 		File testDir = new File("tests");
 		int counter = 0;
 		for(File f : testDir.listFiles()){
-			System.err.flush();
-			System.out.flush();
-			System.out.println("====================\n" + f.getName() + "\n====================");
-			try{
-				System.out.println(Topology.loadTopology(new Scanner(f)));
-			}
-			catch(Exception e){
-				System.out.println("Failed to load " + counter);
-				System.err.println("Failure: " + counter);
-				e.printStackTrace();
-				counter++;
+			if(f.getName().endsWith(".top")){
+				System.err.flush();
+				System.out.flush();
+				System.out.println("====================\n" + f.getName() + "\n====================");
+				try{
+					System.out.println(Topology.loadTopology(new Scanner(f)));
+				}
+				catch(Exception e){
+					System.out.println("Failed to load " + counter);
+					System.err.println("Failure: " + counter);
+					e.printStackTrace();
+					counter++;
+				}
 			}
 		}
 	}
