@@ -25,12 +25,12 @@ public class Tests {
 	}
 	
 	public static void testMachineSpecification(){
-		double[][] macspec = MachineSpecification.randPerturbInvoke(MachineSpecification.uniformInvoke(1.0, 5, 7), 0.9, 1.1, 6.0, 6.0);
-		for(int a=0; a<5; a++){
-			for(int p=0; p<7; p++){
-				System.out.print(new DecimalFormat("0.00").format(macspec[a][p]) + "  ");
-			}
-			System.out.println();
+		try{
+			Topology top = Topology.loadTopology(new Scanner(new File("tests/2.in")));
+			System.out.println(MachineSpecification.makeRandomSpec(top, 4, 0.2));
+		}
+		catch(Exception e){
+			
 		}
 	}
 	

@@ -1,8 +1,17 @@
+import java.text.DecimalFormat;
+
 public class MachineSpecification {
 	
 	public final int numProcessors;
+	public final Topology myTop;
 	public final double[][] invokeTime;//actor-processor
 	public final double[][] communication;//processor-processor
+	
+	//generates a random spec
+	//rdmness is the deviation from 1 of all invoke times
+	public static MachineSpecification makeRandomSpec(Topology top, int numProc, double rdmness) throws Exception{
+		return new MachineSpecification(randPerturbInvoke(uniformInvoke(1.0, top.numActors, numProc), 1.0-rdmness, 1.0+rdmness, 0, 0), top);
+	}
 	
 	//constructs and returns a uniform arroy for invocation time testing
 	public static double[][] uniformInvoke(double t, int numAct, int numProc){
@@ -49,6 +58,19 @@ public class MachineSpecification {
 		}
 		invokeTime = it;
 		communication = null;
+		myTop = top;
+	}
+	
+	public String toString(){
+		StringBuffer ret = new StringBuffer();
+		ret.append("Num Processors: " + numProcessors + " for " + myTop.numActors + " actors\n");
+		for(int a=0; a<invokeTime.length; a++){
+			for(int p=0; p<invokeTime[a].length; p++){
+				ret.append(new DecimalFormat("0.00").format(invokeTime[a][p]) + " ");
+			}
+			ret.append("\n");
+		}
+		return ret.toString();
 	}
 	
 }
