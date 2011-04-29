@@ -9,6 +9,32 @@ public class Tests {
 		testTopologyLoad();
 		testInform("Specifying Machines");
 		testMachineSpecification();
+		testInform("Full Example Testing");
+		try{
+			testExample("1");
+		}
+		catch(Exception e){
+			System.err.println("Test failed");
+			e.printStackTrace();
+		}
+	}
+	
+	public static void testExample(String egName) throws Exception{
+		File topFile = new File("tests/" + egName + ".top");
+		Topology myTop = Topology.loadTopology(new Scanner(topFile));
+		System.out.println(myTop);
+		ArrayList<DelayConfig> testDelays = new ArrayList<DelayConfig>();
+		ArrayList<MachineSpecification> machineSpecs = new ArrayList<MachineSpecification>();
+		for(File f : new File("tests").listFiles()){
+			if(f.getName().startsWith(egName + ".")){
+				if(f.getName().endsWith("delay")){
+					testDelays.add(DelayConfig.loadDelays(myTop, new Scanner(f)));
+				}
+				if(f.getName().endsWith("mach")){
+					//here we load machines
+				}
+			}
+		}
 	}
 	
 	public static void testInform(String text){
