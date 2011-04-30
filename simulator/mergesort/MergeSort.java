@@ -14,9 +14,9 @@ public class MergeSort {
 		msNumber = (int)Math.floor(Math.pow(2, num));
 		int numActors = 3 + (msNumber-1)*2;//2 branching strcutures, 2 print nodes and a generator
 		int numLinks = 1 + (msNumber-1)*2 + msNumber;//2 branching structures, the flow between them, and the link from gen to first print
-		int[][] top = new int[numActors][numLinks];
+		int[][] topMat = new int[numActors][numLinks];
 		
-		Topology top = new Topology();
+		Topology top = new Topology(topMat);
 		
 		Actor[] acts = new Actor[numActors];
 		Link[] links = new Link[numLinks];
