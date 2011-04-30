@@ -1,142 +1,150 @@
 package simulator.benchmarks;
 
+import java.util.*;
+
 import simulator.*;
 
-public class MergeSort {
+public class MergeSort{
 	
-	public final int msNumber;
+	public final int p;
+	public final int maxNum;
+	
+	public final int numActors;
+	public final int numLinks;
 	
 	public static void main(String[] args){
-		new MergeSort(3);//asin 2^5 = 32
+		new MergeSort(3);
 	}
 	
-	public MergeSort(int num){
-		msNumber = (int)Math.floor(Math.pow(2, num));
-		int numActors = 3 + (msNumber-1)*2;//2 branching strcutures, 2 print nodes and a generator
-		int numLinks = 1 + (msNumber-1)*2 + msNumber;//2 branching structures, the flow between them, and the link from gen to first print
+	public MergeSort(int power){
+		p = power;
+		maxNum = (int)Math.pow(2, p);
 		
-		AbstractLink[] links = new AbstractLink[numLinks];
-		int[][] topMat = new int[numActors][numLinks];
+
+		numActors = 3 + (maxNum-1)*2;//2 branching strcutures, 2 print nodes and a generator
+		numLinks = 1 + (maxNum-1)*2 + maxNum;//2 branching structures, the flow between them, and the link from gen to first print
+		
 		AbstractActor[] acts = new AbstractActor[numActors];
+		AbstractLink[] lnks = new AbstractLink[numLinks];
 		
-		int curAct = 0;
-		for(int lev=0; lev<num; lev++){
-			int numThisLev = (int)Math.pow(2, lev);
-			for(int n=0; n<numThisLev; n++){
-				
-			}
+		//acts[0] = new GenActor(0);
+		//acts[1] = new PrintActor(1);
+		//acts[acts.length-1] = new PrintActor(acts.length-1);
+		
+		AbstractActor[] testAct = new AbstractActor[5];
+		AbstractLink[] testLink = new AbstractLink[4];
+		
+		testAct[0] = new GenActor(0);
+		testAct[1] = new GenActor(1);
+		testAct[2] = new MergeActor(2, 2);
+		testAct[3] = new PrintActor(3);
+		testAct[4] = new NullActor(4);
+		
+		testLink[0] = new AbstractLink(0, testAct[0], 1, testAct[2], 1);
+		testLink[1] = new AbstractLink(1, testAct[1], 1, testAct[2], 1);
+		testLink[2] = new AbstractLink(2, testAct[2], 2, testAct[3], maxNum);
+		testLink[3] = new AbstractLink(3, testAct[3], maxNum, testAct[4], 1);
+		
+		
+		try{
+			Topology top = new Topology(testAct, testLink);
+			System.out.println(top);
+			AbstractExecutor.NaiveExecute(top, 4);
+		}
+		catch(Exception e){
+			e.printStackTrace();
 		}
 		
-		//Topology top = new Topology(topMat);
-		
-		
-		
-		
-		Link l1 = new Link();
-		Link outl = new Link();
-		Actor ga = new GenActor(l1);
-		Actor pa = new PrintActor(l1, outl);
-		System.out.println(l1.fillState() + " - " + outl.fillState());
-		ga.fire();
-		System.out.println(l1.fillState() + " - " + outl.fillState());
-		for(int i=0; i<msNumber-1; i++){
-			ga.fire();
-		}
-		System.out.println(l1.fillState() + " - " + outl.fillState());
-		pa.fire();
-		System.out.println(l1.fillState() + " - " + outl.fillState());
 	}
 	
-	private class SortMergeActor extends Actor{
-		public final int amt;
-		public final Link input1;
-		public final Link input2;
-		public final Link output;
-		//a is the ammount this merger outputs
-		public SortMergeActor(int a, Link in1, Link in2, Link out){
-			amt = a;
-			input1 = in1;
-			input2 = in2;
-			output = out;
+	public class NullActor extends AbstractActor{
+
+		public NullActor(int idex) {
+			super(idex);
 		}
 		
-		public void work(){
-			int numAlpha = 0;
-			int numBeta = 0;
-			while(numAlpha + numBeta < amt){
-				if(numAlpha < amt/2){
-					if(numBeta < amt/2){
-						int alpha = (Integer)input1.get();
-						int beta = (Integer)input2.get();
+		//presume 1 input consumes 2, 2 outputs produce 1 each
+		protected void work(Object[][] in, Object[][] out) {
+		}
+	}
+	
+	public class MergeActor extends AbstractActor{
+		
+		int outLength;
+
+		public MergeActor(int idex, int ol) {
+			super(idex);
+			outLength = ol;
+		}
+		
+		protected void work(Object[][] in, Object[][] out) {
+			int aRead = 0;
+			int bRead = 0;
+			for(int i=0; i<outLength; i++){
+				if(aRead < outLength/2){
+					if(bRead < outLength/2){
+						int alpha = (Integer) in[0][aRead];
+						int beta = (Integer) in[1][bRead];
 						if(alpha < beta){
-							output.add(alpha);
-							numAlpha++;
+							out[0][i] = in[0][aRead];
+							aRead++;
 						}
 						else{
-							output.add(beta);
-							numBeta++;
+							out[0][i] = in[1][bRead];
+							bRead++;
 						}
 					}
 					else{
-						output.add(input1.get());//stream the alphas quickly
-						numAlpha++;
+						out[0][i] = in[0][aRead];
+						aRead++;
 					}
 				}
 				else{
-					//we know numbeta is less than to amt/2
-					output.add(input2.get());//stream the betas quickly
-					numBeta++;
+					out[0][i] = in[1][bRead];
+					bRead++;
 				}
 			}
 		}
 	}
 	
-	private class PrintActor extends Actor{
-		public final Link input;
-		public final Link output;
-		public PrintActor(Link in, Link out){
-			input = in;
-			output = out;
+	public class SplitActor extends AbstractActor{
+
+		public SplitActor(int idex) {
+			super(idex);
 		}
 		
-		public void work(){
-			System.out.print("cur[" + msNumber + "] = ");
-			for(int i=0; i<msNumber; i++){
-				Object o = input.get();
-				System.out.print(o.toString() + ", ");
-				output.add(o);
+		//presume 1 input consumes 2, 2 outputs produce 1 each
+		protected void work(Object[][] in, Object[][] out) {
+			out[0][0] = in[0][0];
+			out[1][0] = in[0][1];
+		}
+	}
+	
+	public class GenActor extends AbstractActor{
+		public GenActor(int idex){
+			super(idex);
+		}
+		
+		//we are supposed to have no input and 1 output
+		protected void work(Object[][] in, Object[][] out){
+			out[0][0] = (Integer)((int)Math.floor(Math.random()*100));
+		}
+	}
+	
+	public class PrintActor extends AbstractActor{
+		public PrintActor(int idex){
+			super(idex);
+		}
+		
+		//we are supposed to have 1 input and 1 output
+		protected void work(Object[][] in, Object[][] out){
+			//System.out.println(in.length + ", " + out.length + ", " + in[0].length);
+			System.out.print("seq[" + maxNum + "] = ");
+			for(int i=0; i<maxNum; i++){
+				System.out.print(in[0][i] + ", ");
+				out[0][i] = in[0][i];
 			}
 			System.out.println();
 		}
 	}
-	
-	private class GenActor extends Actor{
-		public final Link output;
-		public GenActor(Link out){
-			output = out;
-		}
-		
-		public void work(){
-			output.add((int)Math.floor(Math.random()*100));
-		}
-	}
-	
-	private class SplitActor extends Actor{
-		
-		public final Link input;
-		public final Link alpha;
-		public final Link beta;
-		
-		public SplitActor(Link in, Link out1, Link out2){
-			input = in;
-			alpha = out1;
-			beta = out2;
-		}
-		
-		public void work(){
-			alpha.add(input.get());
-			alpha.add(input.get());
-		}
-	}
-	
 }

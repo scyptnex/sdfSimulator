@@ -99,8 +99,9 @@ public class Topology {
 		
 		//list the denominators, so we can find their LCM and make all repetitions integral
 		long[] denoms = new long[numActors];
-		for(int i=0; i<numActors; i++)
+		for(int i=0; i<numActors; i++){
 			denoms[i] = actors[i].repetitions.denominator();
+		}
 		long lcm = Fraction.lcmm(denoms);
 		
 		//check that the production ammount equals the consumption ammount
@@ -168,9 +169,9 @@ public class Topology {
 			}
 			
 			for(Link cl: consumptions){
-				if(cl.consumer.repetitions == null){
+				if(cl.producer.repetitions == null){
 					Fraction newRep = repetitions.times(cl.consumeAmmount).dividedBy(cl.produceAmmount);
-					cl.consumer.setRepsRecursively(newRep);
+					cl.producer.setRepsRecursively(newRep);
 				}
 			}
 		}
