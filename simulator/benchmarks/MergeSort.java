@@ -1,4 +1,4 @@
-package simulator.mergesort;
+package simulator.benchmarks;
 
 import simulator.*;
 
@@ -7,19 +7,28 @@ public class MergeSort {
 	public final int msNumber;
 	
 	public static void main(String[] args){
-		new MergeSort(4);//asin 2^5 = 32
+		new MergeSort(3);//asin 2^5 = 32
 	}
 	
 	public MergeSort(int num){
 		msNumber = (int)Math.floor(Math.pow(2, num));
 		int numActors = 3 + (msNumber-1)*2;//2 branching strcutures, 2 print nodes and a generator
 		int numLinks = 1 + (msNumber-1)*2 + msNumber;//2 branching structures, the flow between them, and the link from gen to first print
+		
+		AbstractLink[] links = new AbstractLink[numLinks];
 		int[][] topMat = new int[numActors][numLinks];
+		AbstractActor[] acts = new AbstractActor[numActors];
 		
-		Topology top = new Topology(topMat);
+		int curAct = 0;
+		for(int lev=0; lev<num; lev++){
+			int numThisLev = (int)Math.pow(2, lev);
+			for(int n=0; n<numThisLev; n++){
+				
+			}
+		}
 		
-		Actor[] acts = new Actor[numActors];
-		Link[] links = new Link[numLinks];
+		//Topology top = new Topology(topMat);
+		
 		
 		
 		

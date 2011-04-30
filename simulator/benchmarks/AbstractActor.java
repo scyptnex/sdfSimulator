@@ -1,6 +1,12 @@
-package simulator;
+package simulator.benchmarks;
 
-public abstract class Actor {
+import simulator.*;
+
+public abstract class AbstractActor extends Topology.Actor{
+	
+	public AbstractActor(int idex){
+		super(idex);
+	}
 	
 	public void fire(){
 		//here we may do something with duration of actors or some such

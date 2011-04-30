@@ -1,5 +1,9 @@
+package simulator;
+
 import java.util.*;
 import java.io.*;
+
+import simulator.benchmarks.*;
 
 public class Topology {
 	
@@ -49,6 +53,40 @@ public class Topology {
 			//links show consumption as a positive integer, so must negate the value in topology matrix
 			links[l] = new Link(l, actors[prod], matrix[prod][l], actors[con], -matrix[con][l]);
 		}
+		
+		repetitions = calcRepetitionVector();
+	}
+	
+	//used to make the topology matrices for the benchmarks
+	public Topology(AbstractActor[] acts, AbstractLink[] lnks) throws InvalidTopologyException, NoValidScheduleException{
+		numActors = acts.length;
+		numLinks = lnks.length;
+		
+		actors = new Actor[numActors];
+		links = new Link[numLinks];
+		
+		matrix = new int[numActors][numLinks];
+		
+		for(int a=0; a<numActors; a++){
+			if(acts[a].myIndex != a){
+				throw new InvalidTopologyException("Bad actor formats, actor at index " + a + " expects idnex " + acts[a].myIndex);
+			}
+			else{
+				actors[a] = acts[a];
+			}
+		}
+		
+		for(int l=0; l<numLinks; l++){
+			if(lnks[l].myIndex != l){
+				throw new InvalidTopologyException("Bad link formats, link at index " + l + " expects idnex " + lnks[l].myIndex);
+			}
+			else{
+				links[l] = lnks[l];
+				matrix[links[l].producer.myIndex][l] = links[l].produceAmmount;
+				matrix[links[l].consumer.myIndex][l] = -links[l].consumeAmmount;
+			}
+		}
+		
 		
 		repetitions = calcRepetitionVector();
 	}

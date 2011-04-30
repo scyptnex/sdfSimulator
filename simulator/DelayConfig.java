@@ -1,4 +1,6 @@
+package simulator;
 import java.util.*;
+
 
 public class DelayConfig {
 	

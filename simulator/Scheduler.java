@@ -1,3 +1,5 @@
+package simulator;
+
 public class Scheduler {
 	
 	//returns an array of length top.numActors with an index for which processor(s) an actor lives on

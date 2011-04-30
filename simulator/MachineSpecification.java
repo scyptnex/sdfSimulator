@@ -1,4 +1,6 @@
+package simulator;
 import java.text.DecimalFormat;
+
 
 public class MachineSpecification {
 	
