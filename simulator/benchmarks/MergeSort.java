@@ -12,8 +12,15 @@ public class MergeSort{
 	public final int numActors;
 	public final int numLinks;
 	
+	public final Topology top;
+	
 	public static void main(String[] args){
-		new MergeSort(3);
+		try{
+			AbstractExecutor.NaiveExecute(new MergeSort(6).top, 1);
+		}
+		catch(Exception exc){
+			exc.printStackTrace();
+		}
 	}
 	
 	public MergeSort(int power){
@@ -27,33 +34,66 @@ public class MergeSort{
 		AbstractActor[] acts = new AbstractActor[numActors];
 		AbstractLink[] lnks = new AbstractLink[numLinks];
 		
-		//acts[0] = new GenActor(0);
-		//acts[1] = new PrintActor(1);
-		//acts[acts.length-1] = new PrintActor(acts.length-1);
+		acts[0] = new GenActor(0);
+		acts[1] = new PrintActor(1, true);//this printer on sends to the first splitter
+		//add the split actors
+		int numa = 2;
+		int numl = 0;
+		for(int n=0; n<p; n++){
+			for(int a=0; a<Math.pow(2, n); a++){
+				acts[numa] = new SplitActor(numa);
+				if(n > 0){
+					lnks[numl] = new AbstractLink(numl, acts[2 + (numa-3)/2], 1, acts[numa], 2);
+					//System.out.println((2 + (numa-3)/2) + " -> " + numa + " : " + lnks[numl]);
+					numl++;
+				}
+				numa++;
+			}
+		}
+		//add the merge actors
+		int firstMerge = numa;
+		int firstLinks = numl;
+		for(int n = p-1; n>=0; n--){
+			for(int a=0; a<Math.pow(2, n); a++){
+				acts[numa] = new MergeActor(numa, (int)Math.pow(2, p-n));
+				//System.out.println("Merge " + (int)Math.pow(2, p-n) + " on " + n + ", " + a);
+				if(n < p-1){
+					lnks[numl] = new AbstractLink(numl, acts[firstMerge + numl - firstLinks], (int)Math.pow(2, p-n-1), acts[numa], (int)Math.pow(2, p-n-1));
+					//System.out.println(lnks[numl]);
+					numl++;
+					lnks[numl] = new AbstractLink(numl, acts[firstMerge + numl - firstLinks], (int)Math.pow(2, p-n-1), acts[numa], (int)Math.pow(2, p-n-1));
+					//System.out.println(lnks[numl]);
+					numl++;
+				}
+				numa++;
+			}
+		}
+		int firstLSplit = (int)(firstMerge - Math.pow(2, p-1));//the difficultly named First Last-Split
+		//join the actors between split and merge
+		for(int j=0; j<maxNum; j++){
+			lnks[numl] = new AbstractLink(numl, acts[firstLSplit + j/2], 1, acts[firstMerge + j/2], 1);
+			numl++;
+		}
+		acts[numa] = new PrintActor(acts.length-1, false);//the last actor does not output anything
+		numa++;
+		lnks[numl] = new AbstractLink(numl, acts[0], 1, acts[1], maxNum);//gen to print link
+		numl++;
+		lnks[numl] = new AbstractLink(numl, acts[1], maxNum, acts[2], 2);//print to first split link
+		numl++;
+		lnks[numl] = new AbstractLink(numl, acts[numa-2], maxNum, acts[numa-1], maxNum);//last merge to print link
+		numl++;
 		
-		AbstractActor[] testAct = new AbstractActor[5];
-		AbstractLink[] testLink = new AbstractLink[4];
-		
-		testAct[0] = new GenActor(0);
-		testAct[1] = new GenActor(1);
-		testAct[2] = new MergeActor(2, 2);
-		testAct[3] = new PrintActor(3);
-		testAct[4] = new NullActor(4);
-		
-		testLink[0] = new AbstractLink(0, testAct[0], 1, testAct[2], 1);
-		testLink[1] = new AbstractLink(1, testAct[1], 1, testAct[2], 1);
-		testLink[2] = new AbstractLink(2, testAct[2], 2, testAct[3], maxNum);
-		testLink[3] = new AbstractLink(3, testAct[3], maxNum, testAct[4], 1);
-		
+		Topology topTemp = null;
 		
 		try{
-			Topology top = new Topology(testAct, testLink);
-			System.out.println(top);
-			AbstractExecutor.NaiveExecute(top, 4);
+			topTemp = new Topology(acts, lnks);
 		}
 		catch(Exception e){
 			e.printStackTrace();
+			topTemp = null;
 		}
+		
+		top = topTemp;
 		
 	}
 	
@@ -63,7 +103,7 @@ public class MergeSort{
 			super(idex);
 		}
 		
-		//presume 1 input consumes 2, 2 outputs produce 1 each
+		//presume 1 input consumes 1
 		protected void work(Object[][] in, Object[][] out) {
 		}
 	}
@@ -132,8 +172,10 @@ public class MergeSort{
 	}
 	
 	public class PrintActor extends AbstractActor{
-		public PrintActor(int idex){
+		private final boolean on;
+		public PrintActor(int idex, boolean onsent){
 			super(idex);
+			on = onsent;
 		}
 		
 		//we are supposed to have 1 input and 1 output
@@ -142,7 +184,7 @@ public class MergeSort{
 			System.out.print("seq[" + maxNum + "] = ");
 			for(int i=0; i<maxNum; i++){
 				System.out.print(in[0][i] + ", ");
-				out[0][i] = in[0][i];
+				if(on) out[0][i] = in[0][i];
 			}
 			System.out.println();
 		}

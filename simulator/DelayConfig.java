@@ -25,7 +25,10 @@ public class DelayConfig {
 		if(t.numLinks != dels.length) throw new Exception("Invalid daly configuration, not enough links: top=" + t.numLinks + " delay=" + dels.length);
 		myTop = t;
 		delays = dels;
-		
+	}
+	
+	public void delay(int link){
+		delays[link] = delays[link] + 1;
 	}
 	
 }
