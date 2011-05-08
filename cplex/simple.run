@@ -1,0 +1,16 @@
+model schedule_simple.mod;
+data utility.dat;
+solve;
+printf "-- PASTE BEGIN --\n";
+printf "-- ACTORS --\n";
+for {j in P} {
+   for {i in A: y[i,j]>0} {
+      printf "map, %d, %d\n",j,i;
+   } 
+}
+printf "-- PROCESSORS --\n";
+for {j in P} {
+  printf "processor utilisation:, %d, %f\n", j, sum{i in A} U[i] * y[i,j]; 
+}
+
+end;
