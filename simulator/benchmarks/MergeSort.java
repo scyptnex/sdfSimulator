@@ -16,7 +16,7 @@ public class MergeSort{
 	
 	public static void main(String[] args){
 		try{
-			AbstractExecutor.NaiveExecute(new MergeSort(6).top, 1);
+			AbstractExecutor.NaiveExecute(new MergeSort(10).top, 1);
 		}
 		catch(Exception exc){
 			exc.printStackTrace();
@@ -173,20 +173,29 @@ public class MergeSort{
 	
 	public class PrintActor extends AbstractActor{
 		private final boolean on;
+		private int blok;
 		public PrintActor(int idex, boolean onsent){
 			super(idex);
 			on = onsent;
+			blok = 0;
 		}
 		
 		//we are supposed to have 1 input and 1 output
 		protected void work(Object[][] in, Object[][] out){
-			//System.out.println(in.length + ", " + out.length + ", " + in[0].length);
-			System.out.print("seq[" + maxNum + "] = ");
+			System.out.print(maxNum + " ");
+			if(on){
+				System.out.print("Unsorted");
+			}
+			else{
+				System.out.print("Sorted");
+			}
+			System.out.print("\t[" + blok + "] = ");
 			for(int i=0; i<maxNum; i++){
 				System.out.print(in[0][i] + ", ");
 				if(on) out[0][i] = in[0][i];
 			}
 			System.out.println();
+			blok++;
 		}
 	}
 }
