@@ -4,11 +4,6 @@
 	Nic's magical IP/LP solver
 **/
 
-#objective constants
-#param cm, >= 0;
-#param cc, >= 0;
-
-
 #Number of actors
 param n, >0;
 
@@ -21,8 +16,8 @@ set A := 1..n;
 #processors
 set P := 1..p;
 
-#repetitions
-#param R{A}, integer;
+#Actor groupings, any actor in the same group cant be assigned to same processor
+param AG{A,A}, integer;
 
 
 # runtime of an actor on a given processor 
@@ -59,50 +54,59 @@ actor_allocation {i in A}:
 make_span_constraint{j in P}: 
     sum {i in A} PI[i,j] * x[i,j] <= mks;
 
-linear1{i in A, j in A, k in P, l in P}: 
+primary_pairing{i in A, j in A, k in P, l in P}: 
     y[i,j,k,l] <= x[i,k];
 
-linear2{i in A, j in A, k in P, l in P}: 
+secondary_pairing{i in A, j in A, k in P, l in P}: 
     y[i,j,k,l] <= x[j,l];
 
-linear3{i in A, j in A, k in P, l in P}: 
+sum_pairing{i in A, j in A, k in P, l in P}: 
     x[i,k] + x[j,l] -1 <= y[i,j,k,l];
+
+non_overlap{i in A, j in A, k in P, l in P}:
+	if(k == l) then AG[i,j]*y[i,j,k,l] = 0;
 
 data;
 
-#param cm := 1.0;
-
-#param cc := 1.0;
-
-param n := 3;
+param n := 6;
 
 param p := 2;
 
 param mks := 10;
 
-#param R :=
-#  1 2
-#  2 1
-#  3 1
-#;
+param AG :
+	1	2	3	4	5	6	:=
+  1	0	1	0	0	0	0
+  2	1	0	0	0	0	0
+  3	0	0	0	1	0	0
+  4	0	0	1	0	0	0
+  5	0	0	0	0	0	1
+  6	0	0	0	0	1	0
+;
 
 param PI :
 		1	2	:=
 	1	0.2	0.3
-	2	0.4	0.5
-	3	0.5	0.4
+	2	0.2	0.3
+	3	0.4	0.5
+	4	0.4	0.5
+	5	0.5	0.4
+	6	0.5	0.4
 ;
 
 param CP :
 		1	2	:=
-	1	0	0.3
-	2	0.4	0
+	1	1.0	1.0
+	2	1.0	1.0
 ;
 
 param CA :
-		1	2	3	:=
-	1	0	0.3	0.1
-	2	0.4	0	1.4
-	3	0.5	0.2	0
+		1	2	3	4	5	6	:=
+	1	1.0	1.0	1.0	1.0	1.0	1.0
+	2	1.0	1.0	1.0	1.0	1.0	1.0
+	3	1.0	1.0	1.0	1.0	1.0	1.0
+	4	1.0	1.0	1.0	1.0	1.0	1.0
+	5	1.0	1.0	1.0	1.0	1.0	1.0
+	6	1.0	1.0	1.0	1.0	1.0	1.0
 ;
 
