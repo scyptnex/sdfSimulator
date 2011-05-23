@@ -29,7 +29,8 @@ param CA{A,A} >= 0;
 # communication bandwitdh between two processors (units in bytes per second)
 param CP{P,P} >= 0;
 
-param CAP{i in A, j in A, k in P, l in P} := CA[i,j] * CP[k,l];
+#why is everything being counted twice?
+param CAP{i in A, j in A, k in P, l in P} := CA[i,j] * CP[k,l] + (PI[i,k] + PI[j,l])/n;
  
 #assignment matrix
 var x{A,P}, binary;
@@ -51,8 +52,8 @@ actor_allocation {i in A}:
     sum{j in P} x[i,j] =1;
 
 #maximal process completion
-make_span_constraint{j in P}: 
-    sum {i in A} PI[i,j] * x[i,j] <= mks;
+#make_span_constraint{j in P}: 
+#    sum {i in A} PI[i,j] * x[i,j] <= mks;
 
 primary_pairing{i in A, j in A, k in P, l in P}: 
     y[i,j,k,l] <= x[i,k];
