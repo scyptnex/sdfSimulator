@@ -30,6 +30,7 @@ param CA{A,A} >= 0;
 param CP{P,P} >= 0;
 
 #why is everything being counted twice?
+#its still same optimal
 param CAP{i in A, j in A, k in P, l in P} := CA[i,j] * CP[k,l] + (PI[i,k] + PI[j,l])/n;
  
 #assignment matrix
@@ -39,7 +40,7 @@ var x{A,P}, binary;
 var y{A,A,P,P}, binary;
 
 #costs
-param mks;
+#param mks;
 
 #target solution
 minimize totalcost: 
@@ -66,48 +67,4 @@ sum_pairing{i in A, j in A, k in P, l in P}:
 
 non_overlap{i in A, j in A, k in P, l in P}:
 	if(k == l) then AG[i,j]*y[i,j,k,l] = 0;
-
-data;
-
-param n := 6;
-
-param p := 2;
-
-param mks := 10;
-
-param AG :
-	1	2	3	4	5	6	:=
-  1	0	1	0	0	0	0
-  2	1	0	0	0	0	0
-  3	0	0	0	1	0	0
-  4	0	0	1	0	0	0
-  5	0	0	0	0	0	1
-  6	0	0	0	0	1	0
-;
-
-param PI :
-		1	2	:=
-	1	0.2	0.3
-	2	0.2	0.3
-	3	0.4	0.5
-	4	0.4	0.5
-	5	0.5	0.4
-	6	0.5	0.4
-;
-
-param CP :
-		1	2	:=
-	1	1.0	1.0
-	2	1.0	1.0
-;
-
-param CA :
-		1	2	3	4	5	6	:=
-	1	1.0	1.0	1.0	1.0	1.0	1.0
-	2	1.0	1.0	1.0	1.0	1.0	1.0
-	3	1.0	1.0	1.0	1.0	1.0	1.0
-	4	1.0	1.0	1.0	1.0	1.0	1.0
-	5	1.0	1.0	1.0	1.0	1.0	1.0
-	6	1.0	1.0	1.0	1.0	1.0	1.0
-;
 
