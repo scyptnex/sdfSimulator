@@ -16,6 +16,9 @@ set A := 1..n;
 #processors
 set P := 1..p;
 
+#Edges, makes things a whole lot simpler
+set E, dimen 2;
+
 #Actor groupings, any actor in the same group cant be assigned to same processor
 param AG{A,A}, integer;
 
@@ -44,7 +47,7 @@ var y{A,A,P,P}, binary;
 
 #target solution
 minimize totalcost: 
-     sum {i in A, j in A, k in P, l in P} CAP[i,j,k,l] * y[i,j,k,l]; 
+     sum {(i j) in E, k in P, l in P} CAP[i,j,k,l] * y[i,j,k,l]; 
 
 # actor allocation 
 subject to 
