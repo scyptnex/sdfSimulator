@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <time.h>
 #endif
 
 void begin(void);
@@ -31,7 +32,7 @@ static int numiters = -1;
 int main(int argc, char **argv)
 {
   int option;
-
+	srand(time( NULL ));
   while ((option = getopt(argc, argv, "i:")) != -1)
   {
     switch(option)
@@ -46,14 +47,25 @@ int main(int argc, char **argv)
 }
 #endif
 
+void printMatrix(float* mat, int w, int h){
+	int y,x;
+	for(y=0; y<h; y++){
+		printf("| ");
+		for(x=0; x<w; x++){
+			printf("%f\t", mat[x + y*w]);
+		}
+		printf("|\n");
+	}
+}
+
 void begin(void)
 {
   int i;
   
-  const int x0 = 12;
-  const int y0 = 12;
-  const int x1 = 9;
-  const int y1 = 12;
+  const int x0 = 4;
+  const int y0 = 5;
+  const int x1 = 5;
+  const int y1 = 4;
   const int blockDiv = 3;
 
   /* No initialization since filters are stateless and don't peek.  Yay! */
@@ -62,6 +74,9 @@ void begin(void)
     float *a = make_matrix(x0, y0);
     float *b = make_matrix(x1, y1);
     float *c = block_multiply(a, x0, y0, b, x1, y1, blockDiv);
+	printMatrix(a, x0, y0);
+	printf("\n");
+	printMatrix(b, x1, y1);
     free(a);
     free(b);
     for (i = 0; i < x1 * y0; i++)
@@ -171,11 +186,12 @@ float *transpose(float *a, int x0, int y0)
 /* RETURNS: a sequential floating-point number. */
 float get_float(void)
 {
-  static float num;
-  float val = num;
-  num++;
-  if (num >= 4.0) num = 0.0;
-  return val;
+  //static float num;
+  //float val = num;
+  //num++;
+  //if (num >= 4.0) num = 0.0;
+	int num = 1 + rand()%4;
+  return num*1.0f;
 }
 
 /* RETURNS: a malloc()ed array of x*y floats in row-major order. */
