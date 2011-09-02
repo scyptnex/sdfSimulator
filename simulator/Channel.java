@@ -4,12 +4,18 @@ import java.util.*;
 
 public class Channel {
 	
+	public static int countr = 0; 
+	
+	public final int name;
 	private final LinkedList<Object> tokens;
 	
 	public final Actor producer, consumer;
 	public final int prodamt, consamt;
 	
 	public Channel(Actor prod, int productions, Actor cons, int consumptions){
+		name = countr;
+		countr++;
+		
 		producer = prod;
 		consumer = cons;
 		prodamt = productions;
@@ -17,7 +23,15 @@ public class Channel {
 		tokens = new LinkedList<Object>();
 		
 		producer.addProduction(this);
-		consumer.addProduction(this);
+		consumer.addConsumptions(this);
+	}
+	
+	public String getName(){
+		return "--" + name  + "->";
+	}
+	
+	public int getBufferSize(){
+		return tokens.size();
 	}
 	
 	public void setBuffer(ArrayList<Object> toks){
@@ -32,6 +46,7 @@ public class Channel {
 	}
 	
 	public boolean produce(ArrayList<Object> objs){
+		System.out.println("producing to " + getName());
 		if(objs.size() != prodamt) return false;
 		injectBuffer(objs);
 		return true;

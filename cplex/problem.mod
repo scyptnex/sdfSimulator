@@ -1,7 +1,7 @@
 /**
-	Farhad is a legend
+Farhad is a legend
 
-	Nic's magical IP/LP solver
+Nic's magical IP/LP solver
 **/
 
 #Number of actors
@@ -16,14 +16,11 @@ set A := 1..n;
 #processors
 set P := 1..p;
 
-#Edges, makes things a whole lot simpler
-set E, dimen 2;
-
 #Actor groupings, any actor in the same group cant be assigned to same processor
 param AG{A,A}, integer;
 
 
-# runtime of an actor on a given processor 
+# runtime of an actor on a given processor
 param PI{A,P} >= 0;
 
 # communication cost between two actors (units in bytes)
@@ -46,28 +43,29 @@ var y{A,A,P,P}, binary;
 #param mks;
 
 #target solution
-minimize totalcost: 
-     sum {(i j) in E, k in P, l in P} CAP[i,j,k,l] * y[i,j,k,l]; 
+minimize totalcost:
+     sum {i in A, j in A, k in P, l in P} CAP[i,j,k,l] * y[i,j,k,l];
 
-# actor allocation 
-subject to 
+# actor allocation
+subject to
 
 actor_allocation {i in A}:
     sum{j in P} x[i,j] =1;
 
 #maximal process completion
-#make_span_constraint{j in P}: 
-#    sum {i in A} PI[i,j] * x[i,j] <= mks;
+#make_span_constraint{j in P}:
+# sum {i in A} PI[i,j] * x[i,j] <= mks;
 
-primary_pairing{i in A, j in A, k in P, l in P}: 
+primary_pairing{i in A, j in A, k in P, l in P}:
     y[i,j,k,l] <= x[i,k];
 
-secondary_pairing{i in A, j in A, k in P, l in P}: 
+secondary_pairing{i in A, j in A, k in P, l in P}:
     y[i,j,k,l] <= x[j,l];
 
-sum_pairing{i in A, j in A, k in P, l in P}: 
+sum_pairing{i in A, j in A, k in P, l in P}:
     x[i,k] + x[j,l] -1 <= y[i,j,k,l];
 
 non_overlap{i in A, j in A, k in P, l in P}:
-	if(k == l) then AG[i,j]*y[i,j,k,l] = 0;
+if(k == l) then AG[i,j]*y[i,j,k,l] = 0;
+
 
