@@ -17,7 +17,7 @@ public class Generator {
 		Actor[] tmp = new Actor[actors];
 		long[] reps = new long[actors];
 		for(int a=0; a<actors; a++){
-			tmp[a] = new Actor.Simulated();
+			tmp[a] = new Actor(new Actor.Simulated());
 			reps[a] = (unimod ? 1 : REP_CHOICE[(int)(Math.floor(Math.random()*REP_CHOICE.length))]);
 		}
 		
@@ -38,8 +38,10 @@ public class Generator {
 			//System.out.println(tmp[prod].getName() + "->" + tmp[cons].getName());
 			c = (c+1)%actors;
 		}
-		
-		return new Topology2(tmp[0]);
+		Topology2 ret = new Topology2(tmp[0]);
+		ret.setAffinities(Mapper.genAffinities(ret.actors.size(), Mapper.ACT_COST, Mapper.ACT_COST));
+		ret.setCommunication(1);
+		return ret;
 	}
 	
 }

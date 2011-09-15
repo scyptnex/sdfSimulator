@@ -6,26 +6,23 @@ import java.io.*;
 
 public class NPM {
 	
-	public static final int NUM_AFFINITIES = 3;
-	public static final int CPU_PWR = 5;
-	public static final int ACT_COST = 30;
-	public static final int COM_PWR = 4;
-	public static final int TOK_COST = 8;
-	public static final double INVOK_SCALE = 0.1;
-	public static final double COMM_SCALE = 0.1;
+	public static final int CPU_POWER = Mapper.CPU_PWR;
+	public static final int CPU_RANGE = Mapper.CPU_PWR;
 	
-	public Topology2 top;
+	//public Topology2 top;
 	public final int numProcessors;
-	
+	public final double[][] bandwidths;
 	public final int[][] pAffinities;
-	public final int[][] aAffinities;
-	
-	public final double[][] invocationcosts;
 	
 	public static void main(String[] args){
-		Topology2 top = Generator.generateSimulated(false, false, 16, 3);
-		System.out.println(top);
-		NPM npm = new NPM(top, 8);
+		Topology2 top = Generator.generateSimulated(false, false, 4, 3);
+		Topology2 top2 = new Topology2(top, 3);
+		//System.out.println(top);
+		NPM npm = new NPM(5);
+		
+		Mapper m = new Mapper.Rounds(top, npm);
+		Mapper m2 = new Mapper.Rounds(top2, npm);
+		//Mapper m2 = new Mapper.Rounds(top.actors.size(), npm.numProcessors, top, npm.invocationcosts, npm.communications, npm.bandwidths);
 		//ArrayList<Integer> isch = Scheduler.saturate(top);
 		//System.out.println(isch.size());
 		//for(int ai : isch){
@@ -34,53 +31,22 @@ public class NPM {
 		//npm.printFillState();
 	}
 	
-	public NPM(Topology2 topol, int pcount){
-		top = topol;
+	public NPM(int pcount){
 		numProcessors = pcount;
-		
-		pAffinities = new int[numProcessors][NUM_AFFINITIES];
-		aAffinities = new int[top.actors.size()][NUM_AFFINITIES];
-		
-		rgen(pAffinities, CPU_PWR);
-		rgen(aAffinities, ACT_COST);
-		
-		invocationcosts = affine(pAffinities, aAffinities);
-		
-		Mapper.printProblem(System.out, numProcessors, invocationcosts, top);
-		
-		if(top.rep == null){
-			//TODO handle this
+		bandwidths = new double[numProcessors][numProcessors];
+		for(int p1=0; p1<numProcessors; p1++){
+			for(int p2=p1; p2<numProcessors; p2++){
+				bandwidths[p1][p2] = 1.0 + Math.random();
+				bandwidths[p2][p1] = bandwidths[p1][p2];
+				if(p1 == p2) bandwidths[p1][p2] = 0;//TODO zero cost?
+			}
 		}
-		
+		pAffinities = Mapper.genAffinities(numProcessors, CPU_POWER, CPU_RANGE);
 		
 	}
 	
 	public void printFillState(){
-		for(Channel cnl : top.chans){
-			System.out.println(cnl.producer.getName() + " ---(" + cnl.getBufferSize() + ")--> " + cnl.consumer.getName());
-		}
-	}
-	
-	public static double[][] affine(int[][] proca, int[][] acta){
-		double[][] ret = new double[acta.length][proca.length];
-		for(int a=0; a<acta.length; a++){
-			for(int p=0; p<proca.length; p++){
-				double sm = 0;
-				for(int i=0; i<NUM_AFFINITIES; i++){
-					sm += (double)acta[a][i]/(double)proca[p][i];
-				}
-				ret[a][p] = sm*INVOK_SCALE;
-			}
-		}
-		return ret;
-	}
-	
-	public static void rgen(int[][] arr, int rng){
-		for(int i=0; i<arr.length; i++){
-			for(int j=0; j<arr[i].length; j++){
-				arr[i][j] = rng + (int)Math.floor(Math.random()*rng);
-			}
-		}
+		
 	}
 	
 }

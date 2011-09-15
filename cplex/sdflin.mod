@@ -72,11 +72,11 @@ actor_allocation {i in A}:
 #make_span_constraint{j in P}:
 # sum {i in A} PI[i,j] * x[i,j] <= mks;
 
-#quadapp{i in A, j in A, k in P, l in P}:
-#	y[i,j,k,l] = (x[i,k]+x[j,l])/2;
+quadapp{i in A, j in A, k in P, l in P}:
+	y[i,j,k,l] = (x[i,k]+x[j,l])/2;
 
-quadapp2{i in A, j in A, k in P, l in P}:
-	y[i,j,k,l] = +(x[i,k]-x[j,l])
+#quadapp2{i in A, j in A, k in P, l in P}:
+#	y[i,j,k,l] = min(x[i,k]-x[j,l])
 
 #quad_a{i in A, j in A, k in P, l in P}:
 #	x[i,k] <= y[i,j,k,l];

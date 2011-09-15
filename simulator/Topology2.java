@@ -6,8 +6,70 @@ public class Topology2 {
 	
 	public final ArrayList<Actor> actors;
 	public final ArrayList<Channel> chans;
+	public final int duplicates;//how many versions of each actor are there
 	public final int[][] gamma;
 	public final int[] rep;
+	public int[][] affinities;
+	public double[][] communication;
+	
+	public static void main(String[] args){
+		Topology2 top = Generator.generateSimulated(false, false, 4, 2);
+		System.out.println(top);
+		Topology2 top2 = new Topology2(top, 2);
+		System.out.println(top2);
+	}
+	
+	public Topology2(Topology2 base, int dups){
+		actors = new ArrayList<Actor>(base.actors.size()*dups);
+		chans = new ArrayList<Channel>();
+		duplicates = dups;
+		affinities = null;
+		communication = null;
+		
+		for(int i=0; i<base.actors.size(); i++){
+			for(int d=0; d<duplicates; d++){
+				actors.add(new Actor(base.actors.get(i).method));//TODO this should be the duplicate actor
+			}
+		}
+		
+		for(Channel c : base.chans){
+			int prbi = base.actIdex(c.producer);
+			int cobi = base.actIdex(c.consumer);
+			for(int produp=0; produp < duplicates; produp++){
+				for(int condup=0; condup < duplicates; condup++){
+					int prodex = produp + prbi*duplicates;
+					int condex = condup + cobi*duplicates;
+					chans.add(new Channel(actors.get(prodex), c.prodamt, actors.get(condex), c.consamt));
+				}
+			}
+		}
+		
+		if(base.affinities != null){
+			affinities = new int[base.actors.size()*dups][Mapper.NUM_AFFINITIES];
+			for(int i=0; i<affinities.length; i++){
+				for(int a=0; a<Mapper.NUM_AFFINITIES; a++){
+					affinities[i][a] = base.affinities[i/duplicates][a];
+				}
+			}
+		}
+		
+		if(base.communication != null){
+			communication = new double[base.actors.size()*dups][base.actors.size()*dups];
+			for(int p=0; p<communication.length; p++){
+				for(int c=0; c<communication[p].length; c++){
+					int basep = p/duplicates;
+					int basec = c/duplicates;
+					communication[p][c] = base.communication[basep][basec];
+				}
+			}
+		}
+		
+		gamma = getGamma();
+		rep = getRep();
+		
+		
+		
+	}
 	
 	public Topology2(Actor someActor){
 		Set<Actor> actSet = new HashSet<Actor>();
@@ -15,6 +77,7 @@ public class Topology2 {
 		recursivelyAdd(someActor, actSet, chanSet);
 		actors = new ArrayList<Actor>();
 		chans = new ArrayList<Channel>();
+		duplicates = 1;
 		for(Actor a : actSet){
 			actors.add(a);
 		}
@@ -22,6 +85,53 @@ public class Topology2 {
 			chans.add(c);
 		}
 		
+		gamma = getGamma();
+		rep = getRep();
+		affinities = null;
+		communication = null;
+	}
+	
+	public boolean isdup(int i, int j){
+		if(i >= actors.size() || j >= actors.size()){
+			return false;
+		}
+		return ((i != j) && (i/duplicates == j/duplicates));
+	}
+	
+	public boolean setAffinities(int[][] affins){
+		if(affins.length != actors.size() || affins[0].length != Mapper.NUM_AFFINITIES){
+			affinities = null;
+			return false;
+		}
+		affinities = affins;
+		return true;
+	}
+	public boolean setCommunication(double pertoken){
+		double[] arg = new double[chans.size()];
+		for(int i=0; i<arg.length; i++){
+			arg[i] = pertoken;
+		}
+		return setCommunication(arg);
+	}
+	public boolean setCommunication(double[] channelPerToken){
+		if(channelPerToken == null || channelPerToken.length != chans.size()){
+			communication = null;
+			return false;
+		}
+		communication = new double[actors.size()][actors.size()];
+		int cnum = 0;
+		for(Channel c : chans){
+			int pidex = this.actIdex(c.producer);
+			int cidex = this.actIdex(c.consumer);
+			double namt = c.prodamt*rep[pidex]*channelPerToken[cnum];
+			communication[pidex][cidex] = communication[pidex][cidex] + namt;
+			communication[cidex][pidex] = communication[cidex][pidex] + namt;
+			cnum++;
+		}
+		return true;
+	}
+	
+	private final int[][] getGamma(){
 		int[][] tempGamma = new int[actors.size()][chans.size()];
 		for(int c=0; c<chans.size(); c++){
 			for(int a=0; a<actors.size(); a++){
@@ -36,8 +146,10 @@ public class Topology2 {
 				}
 			}
 		}
-		gamma = tempGamma;
-		
+		return tempGamma;
+	}
+	
+	public final int[] getRep(){
 		int[] tempRep = null;
 		try{
 			Topology hackfix = new Topology(gamma);
@@ -46,25 +158,15 @@ public class Topology2 {
 		catch(Exception e){
 			//do nothing
 		}
-		rep = tempRep;
+		return tempRep;
 	}
 	
 	public int actIdex(Actor a){
-		int i = 0;
-		for(Actor acts : actors){
-			if(acts == a) return i;
-			i++;
-		}
-		return -1;
+		return actors.indexOf(a);
 	}
 	
 	public int chanIdex(Channel c){
-		int i = 0;
-		for(Channel cns : chans){
-			if(cns == c) return i;
-			i++;
-		}
-		return -1;
+		return chans.indexOf(c);
 	}
 	
 	public String toString(){
@@ -82,7 +184,29 @@ public class Topology2 {
 				ret = ret + gamma[a][c] + "\t";
 			}
 		}
-		return ret;
+		StringBuffer sb = new StringBuffer();
+		for(Channel c : chans){
+			sb.append(c.producer.getName() + "--[" + c.prodamt + ", " + c.consamt + "]-->" + c.consumer.getName() + "\n");
+		}
+		sb.append(ret);
+		
+		if(communication != null){
+			for(int i=0; i<actors.size(); i++){
+				sb.append("\n| ");
+				for(int j=0; j<actors.size(); j++){
+					sb.append(communication[i][j] + "\t");
+				}
+				if(affinities != null){
+					sb.append("[");
+					for(int a=0; a<affinities[i].length; a++){
+						sb.append(affinities[i][a] + ",");
+					}
+					sb.append("]");
+				}
+			}
+		}
+		
+		return sb.toString();
 	}
 	
 	private static void recursivelyAdd(Actor cur, Set<Actor> actSet, Set<Channel> chanSet){

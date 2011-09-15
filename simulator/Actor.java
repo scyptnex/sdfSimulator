@@ -3,16 +3,22 @@ package simulator;
 import java.util.*;
 import java.io.IOException;
 
-public abstract class Actor {
+public final class Actor {
 	
 	public static int countr = 0; 
 	
 	public final int name;
+	public final Action method;
 	private final ArrayList<Channel> productions;//links which i produce for
 	private final ArrayList<Channel> consumptions;//links which i consume from
 	
-	public Actor(){
+	public static Actor simulated(){
+		return new Actor(new Simulated());
+	}
+	
+	public Actor(Action actn){
 		name = countr;
+		method = actn;
 		countr++;
 		productions = new ArrayList<Channel>();
 		consumptions = new ArrayList<Channel>();
@@ -31,7 +37,7 @@ public abstract class Actor {
 	}
 	
 	public final void invoke(){
-		customInvoke();
+		
 	}
 	
 	public final int numProductions(){
@@ -67,41 +73,31 @@ public abstract class Actor {
 		return consumptions.get(idex);
 	}
 	
-	protected abstract void customInvoke();
-	
 	public static class SDFException extends IOException{
 		public SDFException(String message){
 			super("SDF Exception raised: " + message);
 		}
 	}
 	
-	public static class Default extends Actor{
-		String name;
-		public Default(String na){
-			super();
-			name = na;
-		}
-		
-		protected void customInvoke() {
-			System.out.println("name invoked");
+	public static class Simulated implements Action{
+		@Override
+		public void invoke(Actor parent, ArrayList<Object>[] inputs, ArrayList<Object>[] outputs) {
+			System.out.println("Invoke: " + parent.getName());
+			//does nothing;
 		}
 	}
 	
-	public static class Simulated extends Actor{
-		public Simulated(){
-			super();
+	public static class Duplicated implements Action{
+		int dups;
+		Action sub;
+		public Duplicated(int dup, Action subAct){
+			sub = subAct;
+			dups = dup;
 		}
-		protected void customInvoke(){
-			System.out.println("Invoke: " + getName());
-			for(int i=0; i<this.numConsumptions(); i++){
-				this.consumeFrom(i);//do nothing with return
-			}
-			for(int p=0; p<this.numProductions(); p++){
-				ArrayList<Object> temp = new ArrayList<Object>(this.productionSize(p));
-				for(int ps=0; ps<this.productionSize(p); ps++) temp.add(null);
-				this.produceTo(p, temp);//do nothing if it fails
-				
-			}
+		@Override
+		public void invoke(Actor parent, ArrayList<Object>[] inputs, ArrayList<Object>[] outputs) {
+			System.out.println("Invoke: " + parent.getName());
+			//TODO this
 		}
 	}
 	

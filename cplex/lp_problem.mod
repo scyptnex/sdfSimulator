@@ -33,43 +33,38 @@ param CP{P,P} >= 0;
 param CAP{i in A, j in A, k in P, l in P} := CA[i,j] * CP[k,l] + (PI[i,k] + PI[j,l])/n;
  
 #assignment matrix
-var x{A,P}, >=0;
+var x{A,P}, >=0, <=1;
 
 #linearisation of term x[a,p] x[b,q]
-#var y{A,A,P,P}, >=0;
-# y = 1 - z 
-var tst{A,A,P,P}, >=0, <=1;
+var z{A,A,P,P}, >=0, <=1;
 
 #costs
 #param mks;
 
 #target solution
-maximize totalcost:
-     sum {i in A, j in A, k in P, l in P} CAP[i,j,k,l] * tst[i,j,k,l];
+minimize totalcost:
+     sum {i in A, j in A, k in P, l in P} CAP[i,j,k,l] * (1-z[i,j,k,l]);
 
 # actor allocation
 subject to
 
 actor_allocation {i in A}:
-    sum{j in P} x[i,j] = 1;
+    sum{j in P} x[i,j] =1;
 
 #maximal process completion
 #make_span_constraint{j in P}:
 # sum {i in A} PI[i,j] * x[i,j] <= mks;
 
-#quadapp{i in A, j in A, k in P, l in P}:
-#	y[i,j,k,l] = (x[i,k] + x[j,l])/2;
-
 primary_pairing{i in A, j in A, k in P, l in P}:
-     tst[i,j,k,l] + x[i,k] >= 1;
+    (1-z[i,j,k,l]) <= x[i,k];
 
 secondary_pairing{i in A, j in A, k in P, l in P}:
-    1 - tst[i,j,k,l] <= x[j,l];
+    (1-z[i,j,k,l]) <= x[j,l];
 
 sum_pairing{i in A, j in A, k in P, l in P}:
-    x[i,k] + x[j,l] -1 <= 1 - tst[i,j,k,l];
+    x[i,k] + x[j,l] -1 <= (1-z[i,j,k,l]);
 
 non_overlap{i in A, j in A, k in P, l in P}:
-if(k == l) then AG[i,j]*(1-tst[i,j,k,l]) = 0;
+if(k == l) then AG[i,j]*(1-z[i,j,k,l]) = 0;
 
 
