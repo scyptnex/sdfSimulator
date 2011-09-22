@@ -4,6 +4,9 @@ import java.util.*;
 
 public class Topology2 {
 	
+	public static final int INVOKE_COST = 2*NPM.CPU_POWER;
+	public static final int INVOKE_RANGE = 10*NPM.CPU_RANGE;
+	
 	public final ArrayList<Actor> actors;
 	public final ArrayList<Channel> chans;
 	public final int duplicates;//how many versions of each actor are there
@@ -17,6 +20,40 @@ public class Topology2 {
 		System.out.println(top);
 		Topology2 top2 = new Topology2(top, 2);
 		System.out.println(top2);
+	}
+	
+	public Topology2(int[][] gam, double[][] comm, int dups, int[][] affine){
+		duplicates = dups;
+		gamma = gam;
+		rep = this.getRep();
+		affinities = affine;
+		communication = comm;
+		actors = new ArrayList<Actor>();
+		chans = new ArrayList<Channel>();
+		for(int i=0; i<gamma.length; i++){
+			actors.add(Actor.simulated());
+		}
+		if(actors.size() > 0){
+			for(int c=0; c<gamma[0].length; c++){
+				int prod = -1;
+				int con = -1;
+				int pamt = 0;
+				int camt = 0;
+				for(int a=0; a<gamma.length; a++){
+					if(gamma[a][c] > 0){
+						prod = a;
+						pamt = gamma[a][c];
+					}
+					else if(gamma[a][c] < 0){
+						con = a;
+						camt = -gamma[a][c];
+					}
+				}
+				if(prod != -1 && con != -1){
+					chans.add(new Channel(actors.get(prod), pamt, actors.get(con), camt));
+				}
+			}
+		}
 	}
 	
 	public Topology2(Topology2 base, int dups){

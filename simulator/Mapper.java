@@ -7,14 +7,14 @@ import java.io.*;
 public abstract class Mapper {
 
 	public static final int NUM_AFFINITIES = 3;
-	public static final int CPU_PWR = 5;
-	public static final int ACT_COST = 30;
-	public static final int COM_PWR = 4;
-	public static final int TOK_COST = 8;
-	public static final double INVOKE_SCALE = 0.1;
-	public static final double COMM_SCALE = 0.1;
+	//public static final int CPU_PWR = 5;
+	//public static final int ACT_COST = 30;
+	//public static final int COM_PWR = 4;
+	//public static final int TOK_COST = 8;
+	//public static final double INVOKE_SCALE = 0.1;
+	//public static final double COMM_SCALE = 0.1;
 	
-	public static void main(String[] args){
+	/**public static void main(String[] args){
 		NPM.main(args);
 	}
 	
@@ -99,6 +99,15 @@ public abstract class Mapper {
 			for(Integer i : map.keySet()){
 				cost = cost + pi[i][map.get(i)];
 			}
+			
+			for(int a=0; a<n; a++){
+				for(int b=a+1; b<n; b++){
+					if(map.containsKey(a) && map.containsKey(b)){
+						cost = cost + ca[a][b]*cp[map.get(a)][map.get(b)];
+					}
+				}
+			}
+			
 			return cost;
 		}
 
@@ -124,7 +133,7 @@ public abstract class Mapper {
 				File tmp = new File("mapdata.temp.dat");
 				FileOutputStream fos = new FileOutputStream(tmp);
 				PrintStream ps = new PrintStream(fos);
-				printProblem(System.out, this);
+				//printProblem(System.out, this);
 				ps.close();
 				fos.close();
 			}
@@ -133,68 +142,6 @@ public abstract class Mapper {
 				mapping = null;
 			}
 		}
-		
-		public static void printProblem(PrintStream out, Mapper m) throws IOException{
-			out.println("data;");
-			out.println("\nparam n := " + m.top.actors.size() + ";");
-			out.println("\nparam p := " + m.p + ";");
-			/**out.println("\nparam e := " + top.chans.size() + ";");
-			
-			out.print("\nset EDJ :=");
-			int[] incidences = new int[top.actors.size()];
-			for(int c=0; c<top.chans.size(); c++){
-				Channel cur = top.chans.get(c);
-				int pro = top.actIdex(cur.producer);
-				int con = top.actIdex(cur.consumer);
-				incidences[pro] = incidences[pro] + 1;
-				incidences[con] = incidences[con] + 1;
-				out.print(" (" + (pro+1) + "," + (con+1) + ")");
-			}
-			out.println(";");**/
-			
-			out.println("param AG :");
-			for(int i=0; i<m.n; i++){
-				out.print("\t" + (i+1));
-			}
-			out.println(" :=");
-			for(int i=0; i<m.n; i++){
-				out.print((i+1));
-				for(int j=0; j<m.n; j++){
-					//this sequence works even when there is 1 dup
-					out.print("\t" + (m.top.isdup(i, j) ? "1" : "0"));
-				}
-				out.println();
-			}
-			out.println(";");
-			
-			//out.println();
-			//printArray(out, "PD", incidences);
-			//out.println();
-			//printArray(out, "AG", new double[top.actors.size()][top.actors.size()]);
-			out.println();
-			printArray(out, "PI", m.pi);
-			out.println();
-			printArray(out, "CA", m.ca);
-			out.println();
-			printArray(out, "CP", m.cp);
-		}
-		private static void printArray(PrintStream out, String name, double[][] arr){
-			int rws = arr.length;
-			int cols = (rws == 0 ? 0 : arr[0].length);
-			out.println("param " + name + " :");
-			for(int c=0; c<cols; c++){
-				out.print("\t" + (c+1));
-			}
-			out.println(" :=");
-			for(int r=0; r<rws; r++){
-				out.print(r+1);
-				for(int c=0; c<cols; c++){
-					out.print("\t" + roundFourDecimals(arr[r][c]));
-				}
-				out.println();
-			}
-			out.println(";");
-		}
 
 		@Override
 		public int map(int act) {
@@ -202,14 +149,7 @@ public abstract class Mapper {
 			return mapping.get(act);
 		}
 	}
-	
-	
-	//stolen froma forum http://www.java-forums.org/advanced-java/4130-rounding-double-two-decimal-places.html
-	private static double roundFourDecimals(double d) {
-		DecimalFormat twoDForm = new DecimalFormat("#.####");
-		return Double.valueOf(twoDForm.format(d));
-	}
-	
+	**/
 	public static int[][] genAffinities(int nbr, int min, int rng){
 		int[][] ret = new int[nbr][];
 		for(int i=0; i<nbr; i++){
@@ -224,7 +164,7 @@ public abstract class Mapper {
 		}
 		return ret;
 	}
-	private static double[][] affine(int[][] proca, int[][] acta, double scale){
+	public static double[][] affine(int[][] proca, int[][] acta, double scale){
 		double[][] ret = new double[acta.length][proca.length];
 		for(int a=0; a<acta.length; a++){
 			for(int p=0; p<proca.length; p++){
@@ -236,6 +176,10 @@ public abstract class Mapper {
 			}
 		}
 		return ret;
+	}
+	public static double roundFourDecimals(double d) {
+		DecimalFormat twoDForm = new DecimalFormat("#.####");
+		return Double.valueOf(twoDForm.format(d));
 	}
 	
 }
