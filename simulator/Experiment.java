@@ -58,7 +58,9 @@ public class Experiment {
 	
 	public static void experiment(File dir, String size, String conn, String mach, Topology2 top, NPM mac, int batchno){
 		File loc = new File(dir, size.substring(0,1) + conn.substring(0,1) + mach.substring(0,1) + "." + top.duplicates + "." + batchno + ".exp");
-		Filer.save(loc, top, mac);
+		Problem p = new Problem(top, mac);
+		p.save(loc);
+		//Filer.save(loc, top, mac);
 		System.out.println("saved " + loc.getName());
 	}
 }

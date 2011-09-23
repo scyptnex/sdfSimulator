@@ -82,9 +82,9 @@ public class Topology2 {
 		}
 		
 		if(base.affinities != null){
-			affinities = new int[base.actors.size()*dups][Mapper.NUM_AFFINITIES];
+			affinities = new int[base.actors.size()*dups][Problem.NUM_AFFINITIES];
 			for(int i=0; i<affinities.length; i++){
-				for(int a=0; a<Mapper.NUM_AFFINITIES; a++){
+				for(int a=0; a<Problem.NUM_AFFINITIES; a++){
 					affinities[i][a] = base.affinities[i/duplicates][a];
 				}
 			}
@@ -136,7 +136,7 @@ public class Topology2 {
 	}
 	
 	public boolean setAffinities(int[][] affins){
-		if(affins.length != actors.size() || affins[0].length != Mapper.NUM_AFFINITIES){
+		if(affins.length != actors.size() || affins[0].length != Problem.NUM_AFFINITIES){
 			affinities = null;
 			return false;
 		}

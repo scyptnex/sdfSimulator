@@ -39,7 +39,7 @@ public class Generator {
 			c = (c+1)%actors;
 		}
 		Topology2 ret = new Topology2(tmp[0]);
-		ret.setAffinities(Mapper.genAffinities(ret.actors.size(), Topology2.INVOKE_COST, Topology2.INVOKE_RANGE));
+		ret.setAffinities(Problem.genAffinities(ret.actors.size(), Topology2.INVOKE_COST, Topology2.INVOKE_RANGE));
 		ret.setCommunication(1);
 		return ret;
 	}

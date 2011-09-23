@@ -30,7 +30,7 @@ param CP{P,P} >= 0;
 
 #why is everything being counted twice?
 #its still same optimal
-param CAP{i in A, j in A, k in P, l in P} := CA[i,j] * CP[k,l] + (PI[i,k] + PI[j,l])/n;
+param CAP{i in A, j in A, k in P, l in P} := (CA[i,j] * CP[k,l])/2 + (PI[i,k] + PI[j,l])/(2*n);
  
 #assignment matrix
 var x{A,P}, binary;

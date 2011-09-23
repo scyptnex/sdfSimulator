@@ -16,12 +16,12 @@ public class NPM {
 	
 	public static void main(String[] args){
 		Topology2 top = Generator.generateSimulated(false, false, 4, 3);
-		Topology2 top2 = new Topology2(top, 3);
+		//Topology2 top2 = new Topology2(top, 3);
 		//System.out.println(top);
 		NPM npm = new NPM(5);
 		
-		Filer.save(new File("test1"), top, npm);
-		Filer.save(new File("test2"), top2, npm);
+		//Filer.save(new File("test1"), top, npm);
+		//Filer.save(new File("test2"), top2, npm);
 		//Filer.save(new File("test3"), top2, npm);
 		
 		//Mapper m = new Mapper.Rounds(top, npm);
@@ -41,12 +41,12 @@ public class NPM {
 		bandwidths = new double[numProcessors][numProcessors];
 		for(int p1=0; p1<numProcessors; p1++){
 			for(int p2=p1; p2<numProcessors; p2++){
-				bandwidths[p1][p2] = Mapper.roundFourDecimals(1.0 + Math.random());
+				bandwidths[p1][p2] = Problem.roundFourDecimals(1.0 + Math.random());
 				bandwidths[p2][p1] = bandwidths[p1][p2];
 				if(p1 == p2) bandwidths[p1][p2] = 0;//TODO zero cost?
 			}
 		}
-		pAffinities = Mapper.genAffinities(numProcessors, CPU_POWER, CPU_RANGE);
+		pAffinities = Problem.genAffinities(numProcessors, CPU_POWER, CPU_RANGE);
 	}
 	
 	public NPM(int pc, double[][] band, int[][] affine){
@@ -67,7 +67,7 @@ public class NPM {
 		ret.append("\nAffine:");
 		for(int p=0; p<numProcessors; p++){
 			ret.append("\n");
-			for(int a=0; a<Mapper.NUM_AFFINITIES; a++){
+			for(int a=0; a<Problem.NUM_AFFINITIES; a++){
 				ret.append(" " + pAffinities[p][a]);
 			}
 		}
