@@ -1,0 +1,939 @@
+Problem:    ip
+Rows:       403
+Columns:    110 (110 integer, 110 binary)
+Non-zeros:  800
+Status:     INTEGER OPTIMAL
+Objective:  totalcost = 11.2356 (MINimum)
+
+   No.   Row name        Activity     Lower bound   Upper bound
+------ ------------    ------------- ------------- -------------
+     1 totalcost             11.2356                             
+     2 actor_allocation[1]
+                                   1             1             = 
+     3 actor_allocation[2]
+                                   1             1             = 
+     4 primary_pairing[1,1,1,1]
+                                   0                          -0 
+     5 primary_pairing[1,1,1,2]
+                                   0                          -0 
+     6 primary_pairing[1,1,1,3]
+                                   0                          -0 
+     7 primary_pairing[1,1,1,4]
+                                   0                          -0 
+     8 primary_pairing[1,1,1,5]
+                                   0                          -0 
+     9 primary_pairing[1,1,2,1]
+                                   0                          -0 
+    10 primary_pairing[1,1,2,2]
+                                   0                          -0 
+    11 primary_pairing[1,1,2,3]
+                                   0                          -0 
+    12 primary_pairing[1,1,2,4]
+                                   0                          -0 
+    13 primary_pairing[1,1,2,5]
+                                   0                          -0 
+    14 primary_pairing[1,1,3,1]
+                                   0                          -0 
+    15 primary_pairing[1,1,3,2]
+                                   0                          -0 
+    16 primary_pairing[1,1,3,3]
+                                   0                          -0 
+    17 primary_pairing[1,1,3,4]
+                                   0                          -0 
+    18 primary_pairing[1,1,3,5]
+                                   0                          -0 
+    19 primary_pairing[1,1,4,1]
+                                   0                          -0 
+    20 primary_pairing[1,1,4,2]
+                                   0                          -0 
+    21 primary_pairing[1,1,4,3]
+                                   0                          -0 
+    22 primary_pairing[1,1,4,4]
+                                   0                          -0 
+    23 primary_pairing[1,1,4,5]
+                                   0                          -0 
+    24 primary_pairing[1,1,5,1]
+                                  -1                          -0 
+    25 primary_pairing[1,1,5,2]
+                                  -1                          -0 
+    26 primary_pairing[1,1,5,3]
+                                  -1                          -0 
+    27 primary_pairing[1,1,5,4]
+                                  -1                          -0 
+    28 primary_pairing[1,1,5,5]
+                                   0                          -0 
+    29 primary_pairing[1,2,1,1]
+                                   0                          -0 
+    30 primary_pairing[1,2,1,2]
+                                   0                          -0 
+    31 primary_pairing[1,2,1,3]
+                                   0                          -0 
+    32 primary_pairing[1,2,1,4]
+                                   0                          -0 
+    33 primary_pairing[1,2,1,5]
+                                   0                          -0 
+    34 primary_pairing[1,2,2,1]
+                                   0                          -0 
+    35 primary_pairing[1,2,2,2]
+                                   0                          -0 
+    36 primary_pairing[1,2,2,3]
+                                   0                          -0 
+    37 primary_pairing[1,2,2,4]
+                                   0                          -0 
+    38 primary_pairing[1,2,2,5]
+                                   0                          -0 
+    39 primary_pairing[1,2,3,1]
+                                   0                          -0 
+    40 primary_pairing[1,2,3,2]
+                                   0                          -0 
+    41 primary_pairing[1,2,3,3]
+                                   0                          -0 
+    42 primary_pairing[1,2,3,4]
+                                   0                          -0 
+    43 primary_pairing[1,2,3,5]
+                                   0                          -0 
+    44 primary_pairing[1,2,4,1]
+                                   0                          -0 
+    45 primary_pairing[1,2,4,2]
+                                   0                          -0 
+    46 primary_pairing[1,2,4,3]
+                                   0                          -0 
+    47 primary_pairing[1,2,4,4]
+                                   0                          -0 
+    48 primary_pairing[1,2,4,5]
+                                   0                          -0 
+    49 primary_pairing[1,2,5,1]
+                                  -1                          -0 
+    50 primary_pairing[1,2,5,2]
+                                  -1                          -0 
+    51 primary_pairing[1,2,5,3]
+                                  -1                          -0 
+    52 primary_pairing[1,2,5,4]
+                                  -1                          -0 
+    53 primary_pairing[1,2,5,5]
+                                   0                          -0 
+    54 primary_pairing[2,1,1,1]
+                                   0                          -0 
+    55 primary_pairing[2,1,1,2]
+                                   0                          -0 
+    56 primary_pairing[2,1,1,3]
+                                   0                          -0 
+    57 primary_pairing[2,1,1,4]
+                                   0                          -0 
+    58 primary_pairing[2,1,1,5]
+                                   0                          -0 
+    59 primary_pairing[2,1,2,1]
+                                   0                          -0 
+    60 primary_pairing[2,1,2,2]
+                                   0                          -0 
+    61 primary_pairing[2,1,2,3]
+                                   0                          -0 
+    62 primary_pairing[2,1,2,4]
+                                   0                          -0 
+    63 primary_pairing[2,1,2,5]
+                                   0                          -0 
+    64 primary_pairing[2,1,3,1]
+                                   0                          -0 
+    65 primary_pairing[2,1,3,2]
+                                   0                          -0 
+    66 primary_pairing[2,1,3,3]
+                                   0                          -0 
+    67 primary_pairing[2,1,3,4]
+                                   0                          -0 
+    68 primary_pairing[2,1,3,5]
+                                   0                          -0 
+    69 primary_pairing[2,1,4,1]
+                                   0                          -0 
+    70 primary_pairing[2,1,4,2]
+                                   0                          -0 
+    71 primary_pairing[2,1,4,3]
+                                   0                          -0 
+    72 primary_pairing[2,1,4,4]
+                                   0                          -0 
+    73 primary_pairing[2,1,4,5]
+                                   0                          -0 
+    74 primary_pairing[2,1,5,1]
+                                  -1                          -0 
+    75 primary_pairing[2,1,5,2]
+                                  -1                          -0 
+    76 primary_pairing[2,1,5,3]
+                                  -1                          -0 
+    77 primary_pairing[2,1,5,4]
+                                  -1                          -0 
+    78 primary_pairing[2,1,5,5]
+                                   0                          -0 
+    79 primary_pairing[2,2,1,1]
+                                   0                          -0 
+    80 primary_pairing[2,2,1,2]
+                                   0                          -0 
+    81 primary_pairing[2,2,1,3]
+                                   0                          -0 
+    82 primary_pairing[2,2,1,4]
+                                   0                          -0 
+    83 primary_pairing[2,2,1,5]
+                                   0                          -0 
+    84 primary_pairing[2,2,2,1]
+                                   0                          -0 
+    85 primary_pairing[2,2,2,2]
+                                   0                          -0 
+    86 primary_pairing[2,2,2,3]
+                                   0                          -0 
+    87 primary_pairing[2,2,2,4]
+                                   0                          -0 
+    88 primary_pairing[2,2,2,5]
+                                   0                          -0 
+    89 primary_pairing[2,2,3,1]
+                                   0                          -0 
+    90 primary_pairing[2,2,3,2]
+                                   0                          -0 
+    91 primary_pairing[2,2,3,3]
+                                   0                          -0 
+    92 primary_pairing[2,2,3,4]
+                                   0                          -0 
+    93 primary_pairing[2,2,3,5]
+                                   0                          -0 
+    94 primary_pairing[2,2,4,1]
+                                   0                          -0 
+    95 primary_pairing[2,2,4,2]
+                                   0                          -0 
+    96 primary_pairing[2,2,4,3]
+                                   0                          -0 
+    97 primary_pairing[2,2,4,4]
+                                   0                          -0 
+    98 primary_pairing[2,2,4,5]
+                                   0                          -0 
+    99 primary_pairing[2,2,5,1]
+                                  -1                          -0 
+   100 primary_pairing[2,2,5,2]
+                                  -1                          -0 
+   101 primary_pairing[2,2,5,3]
+                                  -1                          -0 
+   102 primary_pairing[2,2,5,4]
+                                  -1                          -0 
+   103 primary_pairing[2,2,5,5]
+                                   0                          -0 
+   104 secondary_pairing[1,1,1,1]
+                                   0                          -0 
+   105 secondary_pairing[1,1,1,2]
+                                   0                          -0 
+   106 secondary_pairing[1,1,1,3]
+                                   0                          -0 
+   107 secondary_pairing[1,1,1,4]
+                                   0                          -0 
+   108 secondary_pairing[1,1,1,5]
+                                  -1                          -0 
+   109 secondary_pairing[1,1,2,1]
+                                   0                          -0 
+   110 secondary_pairing[1,1,2,2]
+                                   0                          -0 
+   111 secondary_pairing[1,1,2,3]
+                                   0                          -0 
+   112 secondary_pairing[1,1,2,4]
+                                   0                          -0 
+   113 secondary_pairing[1,1,2,5]
+                                  -1                          -0 
+   114 secondary_pairing[1,1,3,1]
+                                   0                          -0 
+   115 secondary_pairing[1,1,3,2]
+                                   0                          -0 
+   116 secondary_pairing[1,1,3,3]
+                                   0                          -0 
+   117 secondary_pairing[1,1,3,4]
+                                   0                          -0 
+   118 secondary_pairing[1,1,3,5]
+                                  -1                          -0 
+   119 secondary_pairing[1,1,4,1]
+                                   0                          -0 
+   120 secondary_pairing[1,1,4,2]
+                                   0                          -0 
+   121 secondary_pairing[1,1,4,3]
+                                   0                          -0 
+   122 secondary_pairing[1,1,4,4]
+                                   0                          -0 
+   123 secondary_pairing[1,1,4,5]
+                                  -1                          -0 
+   124 secondary_pairing[1,1,5,1]
+                                   0                          -0 
+   125 secondary_pairing[1,1,5,2]
+                                   0                          -0 
+   126 secondary_pairing[1,1,5,3]
+                                   0                          -0 
+   127 secondary_pairing[1,1,5,4]
+                                   0                          -0 
+   128 secondary_pairing[1,1,5,5]
+                                   0                          -0 
+   129 secondary_pairing[1,2,1,1]
+                                   0                          -0 
+   130 secondary_pairing[1,2,1,2]
+                                   0                          -0 
+   131 secondary_pairing[1,2,1,3]
+                                   0                          -0 
+   132 secondary_pairing[1,2,1,4]
+                                   0                          -0 
+   133 secondary_pairing[1,2,1,5]
+                                  -1                          -0 
+   134 secondary_pairing[1,2,2,1]
+                                   0                          -0 
+   135 secondary_pairing[1,2,2,2]
+                                   0                          -0 
+   136 secondary_pairing[1,2,2,3]
+                                   0                          -0 
+   137 secondary_pairing[1,2,2,4]
+                                   0                          -0 
+   138 secondary_pairing[1,2,2,5]
+                                  -1                          -0 
+   139 secondary_pairing[1,2,3,1]
+                                   0                          -0 
+   140 secondary_pairing[1,2,3,2]
+                                   0                          -0 
+   141 secondary_pairing[1,2,3,3]
+                                   0                          -0 
+   142 secondary_pairing[1,2,3,4]
+                                   0                          -0 
+   143 secondary_pairing[1,2,3,5]
+                                  -1                          -0 
+   144 secondary_pairing[1,2,4,1]
+                                   0                          -0 
+   145 secondary_pairing[1,2,4,2]
+                                   0                          -0 
+   146 secondary_pairing[1,2,4,3]
+                                   0                          -0 
+   147 secondary_pairing[1,2,4,4]
+                                   0                          -0 
+   148 secondary_pairing[1,2,4,5]
+                                  -1                          -0 
+   149 secondary_pairing[1,2,5,1]
+                                   0                          -0 
+   150 secondary_pairing[1,2,5,2]
+                                   0                          -0 
+   151 secondary_pairing[1,2,5,3]
+                                   0                          -0 
+   152 secondary_pairing[1,2,5,4]
+                                   0                          -0 
+   153 secondary_pairing[1,2,5,5]
+                                   0                          -0 
+   154 secondary_pairing[2,1,1,1]
+                                   0                          -0 
+   155 secondary_pairing[2,1,1,2]
+                                   0                          -0 
+   156 secondary_pairing[2,1,1,3]
+                                   0                          -0 
+   157 secondary_pairing[2,1,1,4]
+                                   0                          -0 
+   158 secondary_pairing[2,1,1,5]
+                                  -1                          -0 
+   159 secondary_pairing[2,1,2,1]
+                                   0                          -0 
+   160 secondary_pairing[2,1,2,2]
+                                   0                          -0 
+   161 secondary_pairing[2,1,2,3]
+                                   0                          -0 
+   162 secondary_pairing[2,1,2,4]
+                                   0                          -0 
+   163 secondary_pairing[2,1,2,5]
+                                  -1                          -0 
+   164 secondary_pairing[2,1,3,1]
+                                   0                          -0 
+   165 secondary_pairing[2,1,3,2]
+                                   0                          -0 
+   166 secondary_pairing[2,1,3,3]
+                                   0                          -0 
+   167 secondary_pairing[2,1,3,4]
+                                   0                          -0 
+   168 secondary_pairing[2,1,3,5]
+                                  -1                          -0 
+   169 secondary_pairing[2,1,4,1]
+                                   0                          -0 
+   170 secondary_pairing[2,1,4,2]
+                                   0                          -0 
+   171 secondary_pairing[2,1,4,3]
+                                   0                          -0 
+   172 secondary_pairing[2,1,4,4]
+                                   0                          -0 
+   173 secondary_pairing[2,1,4,5]
+                                  -1                          -0 
+   174 secondary_pairing[2,1,5,1]
+                                   0                          -0 
+   175 secondary_pairing[2,1,5,2]
+                                   0                          -0 
+   176 secondary_pairing[2,1,5,3]
+                                   0                          -0 
+   177 secondary_pairing[2,1,5,4]
+                                   0                          -0 
+   178 secondary_pairing[2,1,5,5]
+                                   0                          -0 
+   179 secondary_pairing[2,2,1,1]
+                                   0                          -0 
+   180 secondary_pairing[2,2,1,2]
+                                   0                          -0 
+   181 secondary_pairing[2,2,1,3]
+                                   0                          -0 
+   182 secondary_pairing[2,2,1,4]
+                                   0                          -0 
+   183 secondary_pairing[2,2,1,5]
+                                  -1                          -0 
+   184 secondary_pairing[2,2,2,1]
+                                   0                          -0 
+   185 secondary_pairing[2,2,2,2]
+                                   0                          -0 
+   186 secondary_pairing[2,2,2,3]
+                                   0                          -0 
+   187 secondary_pairing[2,2,2,4]
+                                   0                          -0 
+   188 secondary_pairing[2,2,2,5]
+                                  -1                          -0 
+   189 secondary_pairing[2,2,3,1]
+                                   0                          -0 
+   190 secondary_pairing[2,2,3,2]
+                                   0                          -0 
+   191 secondary_pairing[2,2,3,3]
+                                   0                          -0 
+   192 secondary_pairing[2,2,3,4]
+                                   0                          -0 
+   193 secondary_pairing[2,2,3,5]
+                                  -1                          -0 
+   194 secondary_pairing[2,2,4,1]
+                                   0                          -0 
+   195 secondary_pairing[2,2,4,2]
+                                   0                          -0 
+   196 secondary_pairing[2,2,4,3]
+                                   0                          -0 
+   197 secondary_pairing[2,2,4,4]
+                                   0                          -0 
+   198 secondary_pairing[2,2,4,5]
+                                  -1                          -0 
+   199 secondary_pairing[2,2,5,1]
+                                   0                          -0 
+   200 secondary_pairing[2,2,5,2]
+                                   0                          -0 
+   201 secondary_pairing[2,2,5,3]
+                                   0                          -0 
+   202 secondary_pairing[2,2,5,4]
+                                   0                          -0 
+   203 secondary_pairing[2,2,5,5]
+                                   0                          -0 
+   204 sum_pairing[1,1,1,1]
+                                   0                           1 
+   205 sum_pairing[1,1,1,2]
+                                   0                           1 
+   206 sum_pairing[1,1,1,3]
+                                   0                           1 
+   207 sum_pairing[1,1,1,4]
+                                   0                           1 
+   208 sum_pairing[1,1,1,5]
+                                   1                           1 
+   209 sum_pairing[1,1,2,1]
+                                   0                           1 
+   210 sum_pairing[1,1,2,2]
+                                   0                           1 
+   211 sum_pairing[1,1,2,3]
+                                   0                           1 
+   212 sum_pairing[1,1,2,4]
+                                   0                           1 
+   213 sum_pairing[1,1,2,5]
+                                   1                           1 
+   214 sum_pairing[1,1,3,1]
+                                   0                           1 
+   215 sum_pairing[1,1,3,2]
+                                   0                           1 
+   216 sum_pairing[1,1,3,3]
+                                   0                           1 
+   217 sum_pairing[1,1,3,4]
+                                   0                           1 
+   218 sum_pairing[1,1,3,5]
+                                   1                           1 
+   219 sum_pairing[1,1,4,1]
+                                   0                           1 
+   220 sum_pairing[1,1,4,2]
+                                   0                           1 
+   221 sum_pairing[1,1,4,3]
+                                   0                           1 
+   222 sum_pairing[1,1,4,4]
+                                   0                           1 
+   223 sum_pairing[1,1,4,5]
+                                   1                           1 
+   224 sum_pairing[1,1,5,1]
+                                   1                           1 
+   225 sum_pairing[1,1,5,2]
+                                   1                           1 
+   226 sum_pairing[1,1,5,3]
+                                   1                           1 
+   227 sum_pairing[1,1,5,4]
+                                   1                           1 
+   228 sum_pairing[1,1,5,5]
+                                   1                           1 
+   229 sum_pairing[1,2,1,1]
+                                   0                           1 
+   230 sum_pairing[1,2,1,2]
+                                   0                           1 
+   231 sum_pairing[1,2,1,3]
+                                   0                           1 
+   232 sum_pairing[1,2,1,4]
+                                   0                           1 
+   233 sum_pairing[1,2,1,5]
+                                   1                           1 
+   234 sum_pairing[1,2,2,1]
+                                   0                           1 
+   235 sum_pairing[1,2,2,2]
+                                   0                           1 
+   236 sum_pairing[1,2,2,3]
+                                   0                           1 
+   237 sum_pairing[1,2,2,4]
+                                   0                           1 
+   238 sum_pairing[1,2,2,5]
+                                   1                           1 
+   239 sum_pairing[1,2,3,1]
+                                   0                           1 
+   240 sum_pairing[1,2,3,2]
+                                   0                           1 
+   241 sum_pairing[1,2,3,3]
+                                   0                           1 
+   242 sum_pairing[1,2,3,4]
+                                   0                           1 
+   243 sum_pairing[1,2,3,5]
+                                   1                           1 
+   244 sum_pairing[1,2,4,1]
+                                   0                           1 
+   245 sum_pairing[1,2,4,2]
+                                   0                           1 
+   246 sum_pairing[1,2,4,3]
+                                   0                           1 
+   247 sum_pairing[1,2,4,4]
+                                   0                           1 
+   248 sum_pairing[1,2,4,5]
+                                   1                           1 
+   249 sum_pairing[1,2,5,1]
+                                   1                           1 
+   250 sum_pairing[1,2,5,2]
+                                   1                           1 
+   251 sum_pairing[1,2,5,3]
+                                   1                           1 
+   252 sum_pairing[1,2,5,4]
+                                   1                           1 
+   253 sum_pairing[1,2,5,5]
+                                   1                           1 
+   254 sum_pairing[2,1,1,1]
+                                   0                           1 
+   255 sum_pairing[2,1,1,2]
+                                   0                           1 
+   256 sum_pairing[2,1,1,3]
+                                   0                           1 
+   257 sum_pairing[2,1,1,4]
+                                   0                           1 
+   258 sum_pairing[2,1,1,5]
+                                   1                           1 
+   259 sum_pairing[2,1,2,1]
+                                   0                           1 
+   260 sum_pairing[2,1,2,2]
+                                   0                           1 
+   261 sum_pairing[2,1,2,3]
+                                   0                           1 
+   262 sum_pairing[2,1,2,4]
+                                   0                           1 
+   263 sum_pairing[2,1,2,5]
+                                   1                           1 
+   264 sum_pairing[2,1,3,1]
+                                   0                           1 
+   265 sum_pairing[2,1,3,2]
+                                   0                           1 
+   266 sum_pairing[2,1,3,3]
+                                   0                           1 
+   267 sum_pairing[2,1,3,4]
+                                   0                           1 
+   268 sum_pairing[2,1,3,5]
+                                   1                           1 
+   269 sum_pairing[2,1,4,1]
+                                   0                           1 
+   270 sum_pairing[2,1,4,2]
+                                   0                           1 
+   271 sum_pairing[2,1,4,3]
+                                   0                           1 
+   272 sum_pairing[2,1,4,4]
+                                   0                           1 
+   273 sum_pairing[2,1,4,5]
+                                   1                           1 
+   274 sum_pairing[2,1,5,1]
+                                   1                           1 
+   275 sum_pairing[2,1,5,2]
+                                   1                           1 
+   276 sum_pairing[2,1,5,3]
+                                   1                           1 
+   277 sum_pairing[2,1,5,4]
+                                   1                           1 
+   278 sum_pairing[2,1,5,5]
+                                   1                           1 
+   279 sum_pairing[2,2,1,1]
+                                   0                           1 
+   280 sum_pairing[2,2,1,2]
+                                   0                           1 
+   281 sum_pairing[2,2,1,3]
+                                   0                           1 
+   282 sum_pairing[2,2,1,4]
+                                   0                           1 
+   283 sum_pairing[2,2,1,5]
+                                   1                           1 
+   284 sum_pairing[2,2,2,1]
+                                   0                           1 
+   285 sum_pairing[2,2,2,2]
+                                   0                           1 
+   286 sum_pairing[2,2,2,3]
+                                   0                           1 
+   287 sum_pairing[2,2,2,4]
+                                   0                           1 
+   288 sum_pairing[2,2,2,5]
+                                   1                           1 
+   289 sum_pairing[2,2,3,1]
+                                   0                           1 
+   290 sum_pairing[2,2,3,2]
+                                   0                           1 
+   291 sum_pairing[2,2,3,3]
+                                   0                           1 
+   292 sum_pairing[2,2,3,4]
+                                   0                           1 
+   293 sum_pairing[2,2,3,5]
+                                   1                           1 
+   294 sum_pairing[2,2,4,1]
+                                   0                           1 
+   295 sum_pairing[2,2,4,2]
+                                   0                           1 
+   296 sum_pairing[2,2,4,3]
+                                   0                           1 
+   297 sum_pairing[2,2,4,4]
+                                   0                           1 
+   298 sum_pairing[2,2,4,5]
+                                   1                           1 
+   299 sum_pairing[2,2,5,1]
+                                   1                           1 
+   300 sum_pairing[2,2,5,2]
+                                   1                           1 
+   301 sum_pairing[2,2,5,3]
+                                   1                           1 
+   302 sum_pairing[2,2,5,4]
+                                   1                           1 
+   303 sum_pairing[2,2,5,5]
+                                   1                           1 
+   304 non_overlap[1,1,1,1]
+                                   0            -0             = 
+   305 non_overlap[1,1,1,2]
+                                   0            -0             = 
+   306 non_overlap[1,1,1,3]
+                                   0            -0             = 
+   307 non_overlap[1,1,1,4]
+                                   0            -0             = 
+   308 non_overlap[1,1,1,5]
+                                   0            -0             = 
+   309 non_overlap[1,1,2,1]
+                                   0            -0             = 
+   310 non_overlap[1,1,2,2]
+                                   0            -0             = 
+   311 non_overlap[1,1,2,3]
+                                   0            -0             = 
+   312 non_overlap[1,1,2,4]
+                                   0            -0             = 
+   313 non_overlap[1,1,2,5]
+                                   0            -0             = 
+   314 non_overlap[1,1,3,1]
+                                   0            -0             = 
+   315 non_overlap[1,1,3,2]
+                                   0            -0             = 
+   316 non_overlap[1,1,3,3]
+                                   0            -0             = 
+   317 non_overlap[1,1,3,4]
+                                   0            -0             = 
+   318 non_overlap[1,1,3,5]
+                                   0            -0             = 
+   319 non_overlap[1,1,4,1]
+                                   0            -0             = 
+   320 non_overlap[1,1,4,2]
+                                   0            -0             = 
+   321 non_overlap[1,1,4,3]
+                                   0            -0             = 
+   322 non_overlap[1,1,4,4]
+                                   0            -0             = 
+   323 non_overlap[1,1,4,5]
+                                   0            -0             = 
+   324 non_overlap[1,1,5,1]
+                                   0            -0             = 
+   325 non_overlap[1,1,5,2]
+                                   0            -0             = 
+   326 non_overlap[1,1,5,3]
+                                   0            -0             = 
+   327 non_overlap[1,1,5,4]
+                                   0            -0             = 
+   328 non_overlap[1,1,5,5]
+                                   0            -0             = 
+   329 non_overlap[1,2,1,1]
+                                   0            -0             = 
+   330 non_overlap[1,2,1,2]
+                                   0            -0             = 
+   331 non_overlap[1,2,1,3]
+                                   0            -0             = 
+   332 non_overlap[1,2,1,4]
+                                   0            -0             = 
+   333 non_overlap[1,2,1,5]
+                                   0            -0             = 
+   334 non_overlap[1,2,2,1]
+                                   0            -0             = 
+   335 non_overlap[1,2,2,2]
+                                   0            -0             = 
+   336 non_overlap[1,2,2,3]
+                                   0            -0             = 
+   337 non_overlap[1,2,2,4]
+                                   0            -0             = 
+   338 non_overlap[1,2,2,5]
+                                   0            -0             = 
+   339 non_overlap[1,2,3,1]
+                                   0            -0             = 
+   340 non_overlap[1,2,3,2]
+                                   0            -0             = 
+   341 non_overlap[1,2,3,3]
+                                   0            -0             = 
+   342 non_overlap[1,2,3,4]
+                                   0            -0             = 
+   343 non_overlap[1,2,3,5]
+                                   0            -0             = 
+   344 non_overlap[1,2,4,1]
+                                   0            -0             = 
+   345 non_overlap[1,2,4,2]
+                                   0            -0             = 
+   346 non_overlap[1,2,4,3]
+                                   0            -0             = 
+   347 non_overlap[1,2,4,4]
+                                   0            -0             = 
+   348 non_overlap[1,2,4,5]
+                                   0            -0             = 
+   349 non_overlap[1,2,5,1]
+                                   0            -0             = 
+   350 non_overlap[1,2,5,2]
+                                   0            -0             = 
+   351 non_overlap[1,2,5,3]
+                                   0            -0             = 
+   352 non_overlap[1,2,5,4]
+                                   0            -0             = 
+   353 non_overlap[1,2,5,5]
+                                   0            -0             = 
+   354 non_overlap[2,1,1,1]
+                                   0            -0             = 
+   355 non_overlap[2,1,1,2]
+                                   0            -0             = 
+   356 non_overlap[2,1,1,3]
+                                   0            -0             = 
+   357 non_overlap[2,1,1,4]
+                                   0            -0             = 
+   358 non_overlap[2,1,1,5]
+                                   0            -0             = 
+   359 non_overlap[2,1,2,1]
+                                   0            -0             = 
+   360 non_overlap[2,1,2,2]
+                                   0            -0             = 
+   361 non_overlap[2,1,2,3]
+                                   0            -0             = 
+   362 non_overlap[2,1,2,4]
+                                   0            -0             = 
+   363 non_overlap[2,1,2,5]
+                                   0            -0             = 
+   364 non_overlap[2,1,3,1]
+                                   0            -0             = 
+   365 non_overlap[2,1,3,2]
+                                   0            -0             = 
+   366 non_overlap[2,1,3,3]
+                                   0            -0             = 
+   367 non_overlap[2,1,3,4]
+                                   0            -0             = 
+   368 non_overlap[2,1,3,5]
+                                   0            -0             = 
+   369 non_overlap[2,1,4,1]
+                                   0            -0             = 
+   370 non_overlap[2,1,4,2]
+                                   0            -0             = 
+   371 non_overlap[2,1,4,3]
+                                   0            -0             = 
+   372 non_overlap[2,1,4,4]
+                                   0            -0             = 
+   373 non_overlap[2,1,4,5]
+                                   0            -0             = 
+   374 non_overlap[2,1,5,1]
+                                   0            -0             = 
+   375 non_overlap[2,1,5,2]
+                                   0            -0             = 
+   376 non_overlap[2,1,5,3]
+                                   0            -0             = 
+   377 non_overlap[2,1,5,4]
+                                   0            -0             = 
+   378 non_overlap[2,1,5,5]
+                                   0            -0             = 
+   379 non_overlap[2,2,1,1]
+                                   0            -0             = 
+   380 non_overlap[2,2,1,2]
+                                   0            -0             = 
+   381 non_overlap[2,2,1,3]
+                                   0            -0             = 
+   382 non_overlap[2,2,1,4]
+                                   0            -0             = 
+   383 non_overlap[2,2,1,5]
+                                   0            -0             = 
+   384 non_overlap[2,2,2,1]
+                                   0            -0             = 
+   385 non_overlap[2,2,2,2]
+                                   0            -0             = 
+   386 non_overlap[2,2,2,3]
+                                   0            -0             = 
+   387 non_overlap[2,2,2,4]
+                                   0            -0             = 
+   388 non_overlap[2,2,2,5]
+                                   0            -0             = 
+   389 non_overlap[2,2,3,1]
+                                   0            -0             = 
+   390 non_overlap[2,2,3,2]
+                                   0            -0             = 
+   391 non_overlap[2,2,3,3]
+                                   0            -0             = 
+   392 non_overlap[2,2,3,4]
+                                   0            -0             = 
+   393 non_overlap[2,2,3,5]
+                                   0            -0             = 
+   394 non_overlap[2,2,4,1]
+                                   0            -0             = 
+   395 non_overlap[2,2,4,2]
+                                   0            -0             = 
+   396 non_overlap[2,2,4,3]
+                                   0            -0             = 
+   397 non_overlap[2,2,4,4]
+                                   0            -0             = 
+   398 non_overlap[2,2,4,5]
+                                   0            -0             = 
+   399 non_overlap[2,2,5,1]
+                                   0            -0             = 
+   400 non_overlap[2,2,5,2]
+                                   0            -0             = 
+   401 non_overlap[2,2,5,3]
+                                   0            -0             = 
+   402 non_overlap[2,2,5,4]
+                                   0            -0             = 
+   403 non_overlap[2,2,5,5]
+                                   0            -0             = 
+
+   No. Column name       Activity     Lower bound   Upper bound
+------ ------------    ------------- ------------- -------------
+     1 x[1,1]       *              0             0             1 
+     2 x[1,2]       *              0             0             1 
+     3 x[1,3]       *              0             0             1 
+     4 x[1,4]       *              0             0             1 
+     5 x[1,5]       *              1             0             1 
+     6 x[2,1]       *              0             0             1 
+     7 x[2,2]       *              0             0             1 
+     8 x[2,3]       *              0             0             1 
+     9 x[2,4]       *              0             0             1 
+    10 x[2,5]       *              1             0             1 
+    11 y[1,1,1,1]   *              0             0             1 
+    12 y[1,1,1,2]   *              0             0             1 
+    13 y[1,1,1,3]   *              0             0             1 
+    14 y[1,1,1,4]   *              0             0             1 
+    15 y[1,1,1,5]   *              0             0             1 
+    16 y[1,1,2,1]   *              0             0             1 
+    17 y[1,1,2,2]   *              0             0             1 
+    18 y[1,1,2,3]   *              0             0             1 
+    19 y[1,1,2,4]   *              0             0             1 
+    20 y[1,1,2,5]   *              0             0             1 
+    21 y[1,1,3,1]   *              0             0             1 
+    22 y[1,1,3,2]   *              0             0             1 
+    23 y[1,1,3,3]   *              0             0             1 
+    24 y[1,1,3,4]   *              0             0             1 
+    25 y[1,1,3,5]   *              0             0             1 
+    26 y[1,1,4,1]   *              0             0             1 
+    27 y[1,1,4,2]   *              0             0             1 
+    28 y[1,1,4,3]   *              0             0             1 
+    29 y[1,1,4,4]   *              0             0             1 
+    30 y[1,1,4,5]   *              0             0             1 
+    31 y[1,1,5,1]   *              0             0             1 
+    32 y[1,1,5,2]   *              0             0             1 
+    33 y[1,1,5,3]   *              0             0             1 
+    34 y[1,1,5,4]   *              0             0             1 
+    35 y[1,1,5,5]   *              1             0             1 
+    36 y[1,2,1,1]   *              0             0             1 
+    37 y[1,2,1,2]   *              0             0             1 
+    38 y[1,2,1,3]   *              0             0             1 
+    39 y[1,2,1,4]   *              0             0             1 
+    40 y[1,2,1,5]   *              0             0             1 
+    41 y[1,2,2,1]   *              0             0             1 
+    42 y[1,2,2,2]   *              0             0             1 
+    43 y[1,2,2,3]   *              0             0             1 
+    44 y[1,2,2,4]   *              0             0             1 
+    45 y[1,2,2,5]   *              0             0             1 
+    46 y[1,2,3,1]   *              0             0             1 
+    47 y[1,2,3,2]   *              0             0             1 
+    48 y[1,2,3,3]   *              0             0             1 
+    49 y[1,2,3,4]   *              0             0             1 
+    50 y[1,2,3,5]   *              0             0             1 
+    51 y[1,2,4,1]   *              0             0             1 
+    52 y[1,2,4,2]   *              0             0             1 
+    53 y[1,2,4,3]   *              0             0             1 
+    54 y[1,2,4,4]   *              0             0             1 
+    55 y[1,2,4,5]   *              0             0             1 
+    56 y[1,2,5,1]   *              0             0             1 
+    57 y[1,2,5,2]   *              0             0             1 
+    58 y[1,2,5,3]   *              0             0             1 
+    59 y[1,2,5,4]   *              0             0             1 
+    60 y[1,2,5,5]   *              1             0             1 
+    61 y[2,1,1,1]   *              0             0             1 
+    62 y[2,1,1,2]   *              0             0             1 
+    63 y[2,1,1,3]   *              0             0             1 
+    64 y[2,1,1,4]   *              0             0             1 
+    65 y[2,1,1,5]   *              0             0             1 
+    66 y[2,1,2,1]   *              0             0             1 
+    67 y[2,1,2,2]   *              0             0             1 
+    68 y[2,1,2,3]   *              0             0             1 
+    69 y[2,1,2,4]   *              0             0             1 
+    70 y[2,1,2,5]   *              0             0             1 
+    71 y[2,1,3,1]   *              0             0             1 
+    72 y[2,1,3,2]   *              0             0             1 
+    73 y[2,1,3,3]   *              0             0             1 
+    74 y[2,1,3,4]   *              0             0             1 
+    75 y[2,1,3,5]   *              0             0             1 
+    76 y[2,1,4,1]   *              0             0             1 
+    77 y[2,1,4,2]   *              0             0             1 
+    78 y[2,1,4,3]   *              0             0             1 
+    79 y[2,1,4,4]   *              0             0             1 
+    80 y[2,1,4,5]   *              0             0             1 
+    81 y[2,1,5,1]   *              0             0             1 
+    82 y[2,1,5,2]   *              0             0             1 
+    83 y[2,1,5,3]   *              0             0             1 
+    84 y[2,1,5,4]   *              0             0             1 
+    85 y[2,1,5,5]   *              1             0             1 
+    86 y[2,2,1,1]   *              0             0             1 
+    87 y[2,2,1,2]   *              0             0             1 
+    88 y[2,2,1,3]   *              0             0             1 
+    89 y[2,2,1,4]   *              0             0             1 
+    90 y[2,2,1,5]   *              0             0             1 
+    91 y[2,2,2,1]   *              0             0             1 
+    92 y[2,2,2,2]   *              0             0             1 
+    93 y[2,2,2,3]   *              0             0             1 
+    94 y[2,2,2,4]   *              0             0             1 
+    95 y[2,2,2,5]   *              0             0             1 
+    96 y[2,2,3,1]   *              0             0             1 
+    97 y[2,2,3,2]   *              0             0             1 
+    98 y[2,2,3,3]   *              0             0             1 
+    99 y[2,2,3,4]   *              0             0             1 
+   100 y[2,2,3,5]   *              0             0             1 
+   101 y[2,2,4,1]   *              0             0             1 
+   102 y[2,2,4,2]   *              0             0             1 
+   103 y[2,2,4,3]   *              0             0             1 
+   104 y[2,2,4,4]   *              0             0             1 
+   105 y[2,2,4,5]   *              0             0             1 
+   106 y[2,2,5,1]   *              0             0             1 
+   107 y[2,2,5,2]   *              0             0             1 
+   108 y[2,2,5,3]   *              0             0             1 
+   109 y[2,2,5,4]   *              0             0             1 
+   110 y[2,2,5,5]   *              1             0             1 
+
+Integer feasibility conditions:
+
+KKT.PE: max.abs.err = 0.00e+00 on row 0
+        max.rel.err = 0.00e+00 on row 0
+        High quality
+
+KKT.PB: max.abs.err = 0.00e+00 on row 0
+        max.rel.err = 0.00e+00 on row 0
+        High quality
+
+End of output
