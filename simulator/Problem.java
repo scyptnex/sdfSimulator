@@ -23,28 +23,36 @@ public class Problem {
 	public final double[][] band;
 	
 	public static void main(String[] args){
-		File fi = new File("test.exp");
-		Topology2 top =Generator.generateSimulated(false, false, 5, 3);
-		NPM mac = new NPM(4);
-		Problem prob = new Problem(top, mac);
-		System.out.println(prob);
-		prob.reinvoke(1.0, 1.0);
-		System.out.println(prob);
-		System.out.println("saving test file to \"" + fi.getName() + "\"");
-		prob.save(fi);
-		Problem mirror = new Problem(fi);
-		System.out.println("==========================");
-		System.out.println(mirror);
+		Topology2 top = Generator.generateSimulated(false, false, 4, 3);
+		NPM mac = new NPM(5);
+		Problem alph = new Problem(top, mac, INVOKE_SCALE);
+		alph.reinvoke(1.0, 1.0);
+		Problem bet = new Problem(alph, 2);
+		Problem gam = new Problem(alph, 3);
+		alph.save(new File("alpha.exp"));
+		bet.save(new File("beta.exp"));
+		gam.save(new File("gamma.exp"));
 	}
 	
-	public Problem(Problem p, int dups){
-		
+	public Problem(Problem prob, int dups){
+		mac = prob.mac;
+		p = mac.numProcessors;
+		band = mac.bandwidths;
+		top = new Topology2(prob.top, dups);
+		commu = top.communication;
+		n = top.actors.size();
+		invoke = new double[n][p];
+		for(int a=0; a<n; a++){
+			for(int proc=0; proc<p; proc++){
+				invoke[a][proc] = prob.invoke[a/dups][proc];
+			}
+		}
 	}
 	
-	public Problem(Topology2 t, NPM m){
+	public Problem(Topology2 t, NPM m, double invokeScale){
 		top = t;
 		mac = m;
-		invoke = affine(mac.pAffinities, top.affinities, INVOKE_SCALE);
+		invoke = affine(mac.pAffinities, top.affinities, invokeScale);
 		n = top.actors.size();
 		p = mac.numProcessors;
 		commu = top.communication;
@@ -92,7 +100,7 @@ public class Problem {
 		ret.append(top.toString());
 		ret.append("\n--------------------\n");
 		ret.append(mac.toString());
-		ret.append("\n--------------------");
+		ret.append("\n--------------------\nInvocation:");
 		for(int a=0; a<top.actors.size(); a++){
 			ret.append("\n");
 			for(int p=0; p<mac.numProcessors; p++){

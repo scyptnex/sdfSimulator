@@ -31,7 +31,13 @@ public class Topology2 {
 		actors = new ArrayList<Actor>();
 		chans = new ArrayList<Channel>();
 		for(int i=0; i<gamma.length; i++){
-			actors.add(Actor.simulated());
+			//
+			if(duplicates == 1){
+				actors.add(Actor.simulated());
+			}
+			else{
+				actors.add(new Actor(new Actor.Duplicated(duplicates, i%duplicates, new Actor.Simulated())));
+			}
 		}
 		if(actors.size() > 0){
 			for(int c=0; c<gamma[0].length; c++){
@@ -65,7 +71,7 @@ public class Topology2 {
 		
 		for(int i=0; i<base.actors.size(); i++){
 			for(int d=0; d<duplicates; d++){
-				actors.add(new Actor(base.actors.get(i).method));//TODO this should be the duplicate actor
+				actors.add(new Actor(new Actor.Duplicated(duplicates, d, base.actors.get(i).method)));
 			}
 		}
 		
@@ -206,6 +212,15 @@ public class Topology2 {
 		return chans.indexOf(c);
 	}
 	
+	public String fillState(){
+		StringBuffer ret = new StringBuffer();
+		for(int i=0; i<chans.size(); i++){
+			ret.append(chans.get(i) + " " + chans.get(i).bufferString());
+			if(i != chans.size()-1) ret.append("\n");
+		}
+		return ret.toString();
+	}
+	
 	public String toString(){
 		String ret = "Gamma = " + actors.size() + "x" + chans.size() + "\n";
 		for(int a=0; a<actors.size(); a++){
@@ -221,7 +236,7 @@ public class Topology2 {
 				ret = ret + gamma[a][c] + "\t";
 			}
 		}
-		StringBuffer sb = new StringBuffer();
+		StringBuffer sb = new StringBuffer("Topology: (n=" + actors.size() + ")\n");
 		for(Channel c : chans){
 			sb.append(c.producer.getName() + "--[" + c.prodamt + ", " + c.consamt + "]-->" + c.consumer.getName() + "\n");
 		}

@@ -74,8 +74,4 @@ public class NPM {
 		return ret.toString();
 	}
 	
-	public void printFillState(){
-		
-	}
-	
 }

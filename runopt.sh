@@ -6,7 +6,7 @@ then
 	exit
 fi
 
-for fn in `ls -rS $1`
+for fn in `ls -rS $1 | grep .*\.exp`
 do
 	out=`echo $fn | sed 's/exp$/opt/g'`
 	log=`echo $fn | sed 's/exp$/log/g'`

@@ -27,39 +27,71 @@ public class Channel {
 	}
 	
 	public String getName(){
-		return "--" + name  + "->";
+		return "-" + name  + ">";
+	}
+	
+	public String bufferString(){
+		return tokens.toString();
+	}
+	
+	public String toString(){
+		return producer.getName() + "--" + name + "(" + tokens.size() + ")" + "->" + consumer.getName();
 	}
 	
 	public int getBufferSize(){
 		return tokens.size();
 	}
 	
-	public void setBuffer(ArrayList<Object> toks){
+	public void setBuffer(Object[] toks){
 		tokens.clear();
 		injectBuffer(toks);
 	}
 	
-	public void injectBuffer(ArrayList<Object> toks){
+	public void injectBuffer(Object[] toks){
 		for(Object ob : toks){
-			tokens.push(ob);
+			tokens.add(ob);
 		}
 	}
 	
-	public boolean produce(ArrayList<Object> objs){
-		System.out.println("producing to " + getName());
-		if(objs.size() != prodamt) return false;
+	public synchronized boolean produce(Object[] objs){
+		//System.out.println("producing " + atos(objs) + " to " + getName() + "(" + tokens.size() + ") " + tokens);
+		if(objs.length != prodamt) return false;
 		injectBuffer(objs);
 		return true;
 	}
 	
-	public ArrayList<Object> consume(){
-		ArrayList<Object> ret = new ArrayList<Object>(consamt);
-		for(int i=0; i<consamt; i++){
-			Object ob = tokens.pollFirst();
-			if(ob == null) return null;
-			ret.add(ob);
+	public Object[] snapshot(){
+		Object[] ret = new Object[tokens.size()];
+		for(int i=0; i<tokens.size(); i++){
+			ret[i] = tokens.get(i);
 		}
 		return ret;
+	}
+	
+	public synchronized Object eat(){
+		return tokens.pollFirst();
+	}
+	
+	//public synchronized Object[] consume(){
+		//Object[] ret = new Object[consamt];
+		//for(int i=0; i<consamt; i++){
+			//Object ob = tokens.pollFirst();
+			//System.out.println("polling " + ob);
+			//if(ob == null) return null;
+			//ret[i] = ob;
+		//}
+		//System.out.println("consumed " + atos(ret) + " from " + getName() + "(" + tokens.size() + ") " + tokens);
+		//return ret;
+	//}
+	
+	public static String atos(Object[] arr){
+		StringBuffer ret = new StringBuffer("[");
+		for(int i=0; i<arr.length; i++){
+			ret.append(arr[i]);
+			if(i != arr.length-1) ret.append(", ");
+		}
+		ret.append("]");
+		return ret.toString();
 	}
 
 }

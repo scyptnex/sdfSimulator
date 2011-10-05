@@ -14,6 +14,10 @@ public class Generator {
 	}
 	
 	public static Topology2 generateSimulated(boolean unimod, boolean cyclic, int actors, int degree){
+		return generateSimulated(unimod, cyclic, actors, degree, Topology2.INVOKE_COST, Topology2.INVOKE_RANGE);
+	}
+	
+	public static Topology2 generateSimulated(boolean unimod, boolean cyclic, int actors, int degree, int minAffine, int affineRange){
 		Actor[] tmp = new Actor[actors];
 		long[] reps = new long[actors];
 		for(int a=0; a<actors; a++){
@@ -39,7 +43,7 @@ public class Generator {
 			c = (c+1)%actors;
 		}
 		Topology2 ret = new Topology2(tmp[0]);
-		ret.setAffinities(Problem.genAffinities(ret.actors.size(), Topology2.INVOKE_COST, Topology2.INVOKE_RANGE));
+		ret.setAffinities(Problem.genAffinities(ret.actors.size(), minAffine, affineRange));
 		ret.setCommunication(1);
 		return ret;
 	}
