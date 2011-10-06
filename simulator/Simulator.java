@@ -23,7 +23,7 @@ public class Simulator {
 	}
 	
 	public static void main(String[] args){
-		Mapper m = new Mapper("beta");
+		Mapper m = new Mapper("alpha");
 		//m.report();
 		//System.out.println(m.prob);
 		//System.out.println(m.heurCost + ", " + m.heuristicRounds);
@@ -34,8 +34,8 @@ public class Simulator {
 		//	map[i] = i%m.prob.p;
 		//}
 		
-		Simulator sim = new Simulator(m.prob, m.getMap(m.opt), false);
-		sim.simulate(4);
+		Simulator sim = new Simulator(m.prob, m.getMap(m.opt), true);
+		sim.simulate(5);
 	}
 	
 	public Simulator(Problem p, int[] map, boolean tolerance){
@@ -49,35 +49,48 @@ public class Simulator {
 		}
 		
 		machs = new Machine[prob.p];
-		
 		for(int proc=0; proc<prob.p; proc++){
-			ArrayList<Integer> thisproc = new ArrayList<Integer>();
-			ArrayList<Integer> reps = new ArrayList<Integer>();
-			for(int a=0; a<mapping.length; a++){
-				if(mapping[a] == proc){
-					thisproc.add(a);
-					reps.add(prob.top.rep[a]);
-					
-				}
-			}
-			machs[proc] = new Machine(proc, thisproc, reps, this);
+			machs[proc] = getMachine(proc);
 		}
 		
-		System.out.println(prob.top.fillState());
+		
+	}
+	
+	public Machine getMachine(int procid){
+		ArrayList<Integer> thisproc = new ArrayList<Integer>();
+		ArrayList<Integer> reps = new ArrayList<Integer>();
+		for(int a=0; a<mapping.length; a++){
+			if(mapping[a] == procid){
+				thisproc.add(a);
+				reps.add(prob.top.rep[a]);
+				
+			}
+		}
+		return new Machine(procid, thisproc, reps, this);
 	}
 	
 	//duration in number of rounds
 	public void simulate(int duration){
 		
+		int lastsuccessful = -1;
+		if(tolerant){
+			for(int p=0; p<prob.p; p++){
+				machs[p].saveBuffers(0);
+			}
+			lastsuccessful = 0;
+		}
+		
+		boolean failed = false;
+		
 		for(int ss=0; ss<duration; ss++){
 			System.out.println("-- Steady State " + ss + " --");
-			for(int p=0; p<prob.p; p++){
-				machs[p].saveBuffers(ss);
-			}
 			//System.out.println(prob.top.fillState());
-			//if(ss == 1){
-				//machs[mapping[0]].queueFailure();
-			//}
+			
+			if(ss == 2 && !failed){
+				machs[mapping[0]].queueFailure();
+				failed = true;
+			}
+			
 			for(int p=0; p<prob.p; p++){
 				//System.out.println("starting " + p);
 				machs[p].steadyState();
@@ -85,6 +98,44 @@ public class Simulator {
 			for(int p=0; p<prob.p; p++){
 				machs[p].steadyStateFinish();
 				//System.out.println("ended " + p);
+			}
+			
+			/** Recomputation **/
+			boolean ok = true;
+			if(tolerant){
+				for(int p=0; p<prob.p; p++){
+					if(!machs[p].saveBuffers(ss)){
+						ok = false;
+					}
+				}
+			}
+			if(ok){
+				lastsuccessful = ss;
+			}
+			else if(tolerant){//when we are unsuccessful only tolerant executions do something about it
+				System.out.println("===== Begin checkpoint recovery =====");
+				boolean recoverycomplete = true;
+				for(int i=0; i<prob.p; i++){
+					if(machs[i].failure != FAIL_NONE){
+						System.out.println("restarting machine " + i);
+						machs[i] = getMachine(i);
+					}
+					System.out.println("machine " + i + " reloading state " + lastsuccessful);
+					boolean successful = machs[i].loadBuffers(lastsuccessful);
+					if(!successful){
+						System.out.println("Reload failed");
+						lastsuccessful--;
+						recoverycomplete = false;
+						break;
+					}
+				}
+				if(recoverycomplete){
+					System.out.println("Recovery complete");
+					ss = lastsuccessful;
+				}
+				else{
+					System.out.println("Recovery failed");
+				}
 			}
 		}
 	}
@@ -160,19 +211,36 @@ public class Simulator {
 		}
 		
 		public boolean loadBuffers(int callnum){
+			if(failure != FAIL_NONE) return false;
 			File svfi = new File(CHECKPOINT_DIR, idex + "." + callnum + ".chk");
 			if(!svfi.exists()) return false;
-			//TODO this
-			return true;
+			try{
+				ObjectInputStream ois = new ObjectInputStream(new FileInputStream(svfi));
+				
+				for(int i=0; i<myChannels.size(); i++){
+					Object[] cin = (Object[])ois.readObject();
+					//System.out.println("read ln " + cin.length + ", " + Channel.atos(cin));
+					parent.prob.top.chans.get(myChannels.get(i)).setBuffer(cin);
+				}
+				
+				ois.close();
+				return true;
+			}
+			catch(Exception e){
+				e.printStackTrace();
+				return false;
+			}
 		}
 		
 		public boolean saveBuffers(int callnum){
+			if(failure != FAIL_NONE) return false;
 			File svfi = new File(CHECKPOINT_DIR, idex + "." + callnum + ".chk");
 			try{
 				ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(svfi));
 				for(int i=0; i<myChannels.size(); i++){
-					Channel cur = parent.prob.top.chans.get(i);
+					Channel cur = parent.prob.top.chans.get(myChannels.get(i));
 					Object[] ss = cur.snapshot();
+					//System.out.println("write ln " + ss.length + ", " + cur.bufferString());
 					oos.writeObject(ss);
 				}
 				oos.close();
