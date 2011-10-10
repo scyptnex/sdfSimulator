@@ -8,9 +8,9 @@ public class Generator {
 	public static final long REP_TOKS = Fraction.lcmm(REP_CHOICE);
 	
 	public static void main(String[] args){
-		System.out.println(generateSimulated(true, false, 5, 2));
-		System.out.println(generateSimulated(true, false, 5, 4));
 		System.out.println(generateSimulated(false, false, 5, 3));
+		System.out.println("----------------------------------------");
+		System.out.println(generateSimulated(false, false, 6, 3));
 	}
 	
 	public static Topology2 generateSimulated(boolean unimod, boolean cyclic, int actors, int degree){

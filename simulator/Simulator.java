@@ -29,13 +29,32 @@ public class Simulator {
 		//System.out.println(m.heurCost + ", " + m.heuristicRounds);
 		//System.out.println(m.optCost);
 		
-		//int[] map = new int[m.prob.n];
-		//for(int i=0; i<map.length; i++){
-		//	map[i] = i%m.prob.p;
-		//}
+		int[] map = new int[m.prob.n];
+		for(int i=0; i<map.length; i++){
+			map[i] = i%m.prob.p;
+		}
 		
-		Simulator sim = new Simulator(m.prob, m.getMap(m.opt), true);
-		sim.simulate(5);
+		int dur = 5;
+		double failprob = 0.1;
+		Simulator sim = new Simulator(m.prob, map, true);
+		//Simulator sim = new Simulator(m.prob, m.getMap(m.opt), true);
+		boolean[][] forceFails = new boolean[m.prob.p][dur];
+		for(int p=0; p<m.prob.p; p++){
+			for(int i=0; i<dur; i++){
+				forceFails[p][i] = Simulator.fails(failprob);
+				if(forceFails[p][i]){
+					System.out.println("machine " + p + " will fail at " + i);
+				}
+			}
+		}
+		
+		int trs = 0;
+		for(int i=0; i<100; i++){
+			int rset = sim.simulate(dur, failprob, forceFails);
+			trs += rset;
+			System.out.println("resets " + rset);
+		}
+		System.out.println(" total " + trs + " average " + ((double)trs/100.0));
 	}
 	
 	public Simulator(Problem p, int[] map, boolean tolerance){
@@ -70,7 +89,7 @@ public class Simulator {
 	}
 	
 	//duration in number of rounds
-	public void simulate(int duration){
+	public int simulate(int duration, double rfailprob, boolean[][] forceFails){
 		
 		int lastsuccessful = -1;
 		if(tolerant){
@@ -80,15 +99,23 @@ public class Simulator {
 			lastsuccessful = 0;
 		}
 		
-		boolean failed = false;
+		int resets = 0;
 		
 		for(int ss=0; ss<duration; ss++){
 			System.out.println("-- Steady State " + ss + " --");
 			//System.out.println(prob.top.fillState());
 			
-			if(ss == 2 && !failed){
-				machs[mapping[0]].queueFailure();
-				failed = true;
+			for(int p=0; p<prob.p; p++){
+				if(machs[p].failure == FAIL_NONE){
+					if(forceFails[p][ss]){
+						forceFails[p][ss] = false;
+						machs[p].queueFailure();
+					}
+					if(fails(rfailprob)){
+						System.out.println("machine " + p + " fails at random");
+						machs[p].queueFailure();
+					}
+				}
 			}
 			
 			for(int p=0; p<prob.p; p++){
@@ -132,12 +159,15 @@ public class Simulator {
 				if(recoverycomplete){
 					System.out.println("Recovery complete");
 					ss = lastsuccessful;
+					resets++;
 				}
 				else{
 					System.out.println("Recovery failed");
 				}
 			}
 		}
+		
+		return resets;
 	}
 	
 	public synchronized void invokeActor(int actor){
@@ -292,6 +322,10 @@ public class Simulator {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public static boolean fails(double prob){
+		return Math.random()< prob;
 	}
 	
 }
