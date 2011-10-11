@@ -87,6 +87,21 @@ public class Problem {
 		band = mac.bandwidths;
 	}
 	
+	public void selfinvoke(){
+		double min = Double.MAX_VALUE;
+		double max = 0.0;
+		for(int act=0; act<n; act++){
+			for(int proc=0; proc < p; proc++){
+				min = Math.min(min, invoke[act][proc]);
+				max = Math.max(max, invoke[act][proc]);
+			}
+		}
+		if(max != 0.0 && min != Double.MAX_VALUE){
+			//System.out.println("reinvoke with " + min + " - " + max);
+			reinvoke(min, (max - min));
+		}
+	}
+	
 	public void reinvoke(double min, double range){
 		for(int i=0; i<top.actors.size(); i++){
 			for(int p=0; p<mac.numProcessors; p++){

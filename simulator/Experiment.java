@@ -8,18 +8,48 @@ public class Experiment {
 	public static final int NUM_EXPERIMENTS = 4;
 	
 	public static void main(String[] args){
-		try{
-			generateExperiments();
-		}
-		catch(IOException e){
-			e.printStackTrace();
+		//generateExperiments();
+		miniExperiments();
+	}
+	
+	public static void miniExperiments(){
+		File dir = expdir("exp", false);
+		int[] degs = new int[]{2, 3, 4};
+		for(int n=5; n<11; n++){
+			for(int p=3; p<5; p++){
+				for(int d=0; d<degs.length; d++){
+					for(int s=0; s<2; s++){
+						for(int i=0; i<2; i++){
+							Topology2 top = Generator.generateSimulated(true, false, n, degs[d]);
+							NPM mac = new NPM(p);
+							Problem prob = new Problem(top, mac, Problem.INVOKE_SCALE + s*0.2);
+							String nm = "n" + n + "p" + p + "x" + (degs.length*i + d) + ".exp";
+							//System.out.println(nm);
+							//File sv = new File(dir, "a" + nm);
+							//System.out.println(dir.getAbsolutePath() + ", " + sv.getAbsolutePath());
+							prob.save(new File(dir, "a" + nm));
+							prob.selfinvoke();
+							prob.save(new File(dir, "r" + nm));
+						}
+					}
+				}
+			}
 		}
 	}
 	
-	public static void generateExperiments() throws IOException{
+	public static File expdir(String nm, boolean ts){
 		Calendar c = Calendar.getInstance();
-		File expdir = new File("experiments " + c.get(Calendar.YEAR) + "-" + c.get(Calendar.MONTH) + "-" + c.get(Calendar.DAY_OF_MONTH) + " " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND));
-		if(! expdir.mkdir()) return;
+		String stamp = c.get(Calendar.YEAR) + "-" + c.get(Calendar.MONTH) + "-" + c.get(Calendar.DAY_OF_MONTH) + " " + c.get(Calendar.HOUR_OF_DAY) + ":" + c.get(Calendar.MINUTE) + ":" + c.get(Calendar.SECOND);
+		String name = nm;
+		if(ts) name = name + " " + stamp;
+		File expdir = new File(name);
+		if(!expdir.exists() && !expdir.mkdir()) return null;
+		return expdir;
+	}
+	
+	public static void generateExperiments(){
+		File expdir = expdir("experiments", true);
+		if(expdir == null) return;
 		experimentBatch(expdir);
 	}
 	
