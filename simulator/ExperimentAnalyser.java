@@ -55,6 +55,51 @@ public class ExperimentAnalyser {
 	
 	public void analyse(){
 		subanalyse(nmin, nmax, pmin, pmax);
+		rangeAnalyse(4);
+	}
+	
+	private void rangeAnalyse(int grads){
+		double gradat = (double)(nmax - nmin);
+		gradat = gradat/grads;
+		System.out.println(gradat);
+		
+		for(int g=0; g<grads; g++){
+			double lbound  = nmin + g*gradat;
+			double ubound = nmin + (g+1)*gradat;
+			
+			int tot = 0;
+			double totalOptimal = 0.0;
+			double totalHeuristic = 0.0;
+			double totalComparative = 0.0;
+			
+			int divergents = 0;
+			double divOpt = 0.0;
+			double divHeu = 0.0;
+			double divComp = 0.0;
+			
+			
+			
+			for(int i=0; i<optimalCosts.size(); i++){
+				if(ns.get(i) <= ubound && (ns.get(i) > lbound || (ns.get(i) == lbound && g == 0))){
+					tot++;
+					totalOptimal += optimalCosts.get(i);
+					totalHeuristic += heuristicCosts.get(i);
+					totalComparative += comparative.get(i);
+					
+					if(!optimalCosts.get(i).equals(heuristicCosts.get(i))){
+						divergents++;
+						divOpt += optimalCosts.get(i);
+						divHeu += heuristicCosts.get(i);
+						divComp += comparative.get(i);
+					}
+				}
+			}
+			
+			System.out.print(lbound + " - " + ubound + "(" + tot + "): ");
+			System.out.print("opt " + totalOptimal/tot + " heu " + totalHeuristic/tot + " comp " + totalComparative/tot);
+			System.out.println();
+			System.out.println("\t" + "opt " + divOpt/divergents + " heu " + divHeu/divergents + " comp " + divComp/divergents);
+		}
 	}
 	
 	//min is inclusive max is exclusive
@@ -105,6 +150,11 @@ public class ExperimentAnalyser {
 			comparative.add(m.heurCost/m.optCost);
 			ns.add(m.prob.n);
 			ps.add(m.prob.p);
+			
+			if(m.prob.n < 5){
+				m.report();
+			}
+			
 			pmin = Math.min(pmin, m.prob.p);
 			nmin = Math.min(nmin, m.prob.n);
 			pmax = Math.max(pmax, m.prob.p);

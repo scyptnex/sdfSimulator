@@ -7,6 +7,8 @@ import java.io.*;
 
 public class Mapper {
 	
+	public final String file;
+	
 	public final Problem prob;
 	
 	public final HashMap<Integer, Integer> opt;
@@ -42,6 +44,8 @@ public class Mapper {
 		File heurfi = new File(name + ".heu");
 		File brutefi = new File(name + ".bru");
 		
+		file = expfile.getAbsolutePath();
+		
 		prob = new Problem(expfile);
 		
 		opt = loadMapping(optfi);
@@ -55,6 +59,7 @@ public class Mapper {
 	
 	public void report(){
 		System.out.println("========== Mapping Report ==========");
+		System.out.println(file);
 		System.out.println(prob);
 		System.out.println("====================================");
 		System.out.println("Opt: (" + optCost + ") - " + (opt == null ? "[]" : mapString(opt)));
