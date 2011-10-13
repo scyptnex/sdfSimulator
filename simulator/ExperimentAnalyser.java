@@ -55,7 +55,7 @@ public class ExperimentAnalyser {
 	
 	public void analyse(){
 		subanalyse(nmin, nmax, pmin, pmax);
-		rangeAnalyse(4);
+		rangeAnalyse(6);
 	}
 	
 	private void rangeAnalyse(int grads){
@@ -95,10 +95,16 @@ public class ExperimentAnalyser {
 				}
 			}
 			
-			System.out.print(lbound + " - " + ubound + "(" + tot + "): ");
-			System.out.print("opt " + totalOptimal/tot + " heu " + totalHeuristic/tot + " comp " + totalComparative/tot);
+			//System.out.print(lbound + " - " + ubound + "(" + divergents + "/" + tot + "): ");
+			//System.out.print("opt " + Problem.roundFourDecimals(totalOptimal/tot) + " heu " + Problem.roundFourDecimals(totalHeuristic/tot) + " comp " + Problem.roundFourDecimals(totalComparative/tot));
+			//System.out.println();
+			//System.out.println("\t" + "opt " + Problem.roundFourDecimals(divOpt/divergents) + " heu " + Problem.roundFourDecimals(divHeu/divergents) + " comp " + Problem.roundFourDecimals(divComp/divergents));
+			
+			System.out.print((g+5) + " & " + tot + " & " + divergents  + " & ");
+			System.out.print(Problem.roundFourDecimals(totalOptimal/tot)  + " & " + Problem.roundFourDecimals(totalHeuristic/tot)  + " & ");
+			System.out.print(Problem.roundFourDecimals(totalComparative/tot)  + " & " + Problem.roundFourDecimals(divOpt/divergents)  + " & ");
+			System.out.print(Problem.roundFourDecimals(divHeu/divergents)  + " & " + Problem.roundFourDecimals(divComp/divergents));
 			System.out.println();
-			System.out.println("\t" + "opt " + divOpt/divergents + " heu " + divHeu/divergents + " comp " + divComp/divergents);
 		}
 	}
 	

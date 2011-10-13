@@ -9,7 +9,30 @@ public class Experiment {
 	
 	public static void main(String[] args){
 		//generateExperiments();
-		miniExperiments();
+		//miniExperiments();
+		multiExperiments();
+	}
+	
+	public static void multiExperiments(){
+		File dir = expdir("multi", false);
+		for(int n=3; n<=6; n++){
+			int deg = n - 1 - (n-2)/3;
+			System.out.println(n + ", " + deg);
+			for(int s=0; s<2; s++){
+				for(int i=0; i<4; i++){
+					Topology2 basetop = Generator.generateSimulated(true, false, n, deg);
+					NPM basemac = new NPM(5);
+					Problem prob = new Problem(basetop, basemac, Problem.INVOKE_SCALE + s*0.2);
+					prob.selfinvoke();
+					String nm = "n" + n + "s" + s + "x" + i;
+					prob.save(new File(dir, nm + "d1.exp"));
+					for(int d=2; n*d <= 12; d++){
+						Problem dupl = new Problem(prob, d);
+						dupl.save(new File(dir, nm + "d" + d + ".exp"));
+					}
+				}
+			}
+		}
 	}
 	
 	public static void miniExperiments(){
