@@ -10,7 +10,28 @@ public class Experiment {
 	public static void main(String[] args){
 		//generateExperiments();
 		//miniExperiments();
-		multiExperiments();
+		//multiExperiments();
+		distribExperiments();
+	}
+	
+	public static void distribExperiments(){
+		File dir = expdir("distrib", false);
+		for(int s=0; s<12; s++){
+			for(int i=0; i<4; i++){
+				Topology2 basetop = Generator.generateSimulated(true, false, 8, 5);
+				NPM basemac = new NPM(5);
+				Problem prob = new Problem(basetop, basemac, s*Problem.INVOKE_SCALE);
+				prob.selfinvoke();
+				prob.save(new File(dir, "us" + s + "x" + i + ".exp"));
+				
+				Topology2 dupl = Generator.generateSimulated(true, false, 4, 2);
+				NPM newMac = new NPM(5);
+				Problem p2 = new Problem(dupl, newMac, s*Problem.INVOKE_SCALE);
+				p2 = new Problem(p2, 2);
+				p2.selfinvoke();
+				p2.save(new File(dir, "ms" + s + "x" + i + ".exp"));
+			}
+		}
 	}
 	
 	public static void multiExperiments(){
